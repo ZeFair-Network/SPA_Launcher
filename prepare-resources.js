@@ -9,10 +9,10 @@ const path = require('path');
 
 const MC_VERSION = '1.21.11'; // Ваша версия
 
-// Источник - установленный Minecraft
+// Источник - установленный Minecraft через SPA Launcher
 const MINECRAFT_DIR = process.env.APPDATA
-  ? path.join(process.env.APPDATA, '.minecraft')
-  : path.join(process.env.HOME, '.minecraft');
+  ? path.join(process.env.APPDATA, '.spa-launcher', 'minecraft')
+  : path.join(process.env.HOME, '.spa-launcher', 'minecraft');
 
 // Назначение - ресурсы лаунчера
 const RESOURCES_DIR = path.join(__dirname, 'resources', 'minecraft');
@@ -27,6 +27,7 @@ const SOURCE = {
   assets: path.join(MINECRAFT_DIR, 'assets'),
   libraries: path.join(MINECRAFT_DIR, 'libraries'),
   versions: path.join(MINECRAFT_DIR, 'versions', MC_VERSION),
+  mods: path.join(MINECRAFT_DIR, 'mods'),
 };
 
 // Структура назначения
@@ -34,6 +35,7 @@ const DEST = {
   assets: path.join(RESOURCES_DIR, 'assets'),
   libraries: path.join(RESOURCES_DIR, 'libraries'),
   versions: path.join(RESOURCES_DIR, 'versions', MC_VERSION),
+  mods: path.join(RESOURCES_DIR, 'mods'),
 };
 
 // Проверка наличия Minecraft
@@ -97,13 +99,17 @@ console.log('📦 Версия...');
 const versionCount = copyRecursive(SOURCE.versions, DEST.versions);
 console.log(`✅ Скопировано: ${versionCount} файлов\n`);
 
+console.log('📦 Моды...');
+const modsCount = copyRecursive(SOURCE.mods, DEST.mods);
+console.log(`✅ Скопировано: ${modsCount} файлов\n`);
+
 const totalSize = getSize(RESOURCES_DIR);
 const sizeMB = (totalSize / 1024 / 1024).toFixed(2);
 
 console.log('='.repeat(50));
 console.log('🎉 Готово!');
 console.log('='.repeat(50));
-console.log(`Всего: ${assetsCount + libsCount + versionCount} файлов`);
+console.log(`Всего: ${assetsCount + libsCount + versionCount + modsCount} файлов`);
 console.log(`Размер: ${sizeMB} MB`);
 console.log(`\nПуть: ${RESOURCES_DIR}\n`);
 

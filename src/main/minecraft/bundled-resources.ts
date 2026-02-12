@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { app } from 'electron';
-import { getMinecraftDir, getAssetsDir, getLibrariesDir, getVersionsDir } from '../utils/paths';
+import { getMinecraftDir, getAssetsDir, getLibrariesDir, getVersionsDir, getModsDir } from '../utils/paths';
 import { MINECRAFT_CONFIG } from './config';
 
 /**
@@ -45,12 +45,14 @@ export async function copyBundledResources(
     assets: path.join(bundledPath, 'assets'),
     libraries: path.join(bundledPath, 'libraries'),
     versions: path.join(bundledPath, 'versions', MINECRAFT_CONFIG.version),
+    mods: path.join(bundledPath, 'mods'),
   };
 
   const destinations = {
     assets: getAssetsDir(),
     libraries: getLibrariesDir(),
     versions: path.join(getVersionsDir(), MINECRAFT_CONFIG.version),
+    mods: getModsDir(),
   };
 
   // Подсчет файлов
@@ -70,7 +72,8 @@ export async function copyBundledResources(
   const totalFiles =
     countFiles(sources.assets) +
     countFiles(sources.libraries) +
-    countFiles(sources.versions);
+    countFiles(sources.versions) +
+    countFiles(sources.mods);
 
   let copiedFiles = 0;
 
@@ -112,8 +115,11 @@ export async function copyBundledResources(
   onProgress(40, 'Копирование библиотек...');
   copyRecursive(sources.libraries, destinations.libraries);
 
-  onProgress(80, 'Копирование версии...');
+  onProgress(70, 'Копирование версии...');
   copyRecursive(sources.versions, destinations.versions);
+
+  onProgress(90, 'Копирование модов...');
+  copyRecursive(sources.mods, destinations.mods);
 
   onProgress(100, 'Встроенные ресурсы скопированы!');
 }
