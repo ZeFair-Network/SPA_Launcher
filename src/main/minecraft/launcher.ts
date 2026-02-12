@@ -7,6 +7,7 @@ import { getVersionData } from './downloader';
 import { getFabricProfile, getFabricVersionId } from './fabric';
 import { storeGet, storeSet } from '../utils/store';
 import { MINECRAFT_CONFIG } from './config';
+import { createServersFile } from './servers';
 
 const SERVER_ADDRESS = MINECRAFT_CONFIG.serverAddress;
 const MC_VERSION = MINECRAFT_CONFIG.version;
@@ -49,6 +50,16 @@ export async function launchGame(
   }
 
   const settings = getSettings();
+
+  // Create servers.dat for auto-connect
+  if (settings.autoConnect) {
+    try {
+      createServersFile();
+      onLog('Создан список серверов для автоподключения');
+    } catch (err: any) {
+      onLog(`Предупреждение: не удалось создать servers.dat: ${err.message}`);
+    }
+  }
 
   // Find Java
   let javaPath = settings.javaPath || (await findJava());
@@ -106,9 +117,8 @@ export async function launchGame(
   if (settings.autoConnect) {
     const parts = SERVER_ADDRESS.split(':');
     gameArgs.push('--server', parts[0]);
-    if (parts.length > 1) {
-      gameArgs.push('--port', parts[1]);
-    }
+    const port = parts.length > 1 ? parts[1] : '25565';
+    gameArgs.push('--port', port);
   }
 
   const allArgs = [...jvmArgs, ...gameArgs];
