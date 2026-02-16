@@ -113,12 +113,10 @@ export async function launchGame(
     '--versionType', 'release',
   ];
 
-  // Auto-connect to server
+  // Auto-connect to server using quickPlay (Minecraft 1.20+)
   if (settings.autoConnect) {
-    const parts = SERVER_ADDRESS.split(':');
-    gameArgs.push('--server', parts[0]);
-    const port = parts.length > 1 ? parts[1] : '25565';
-    gameArgs.push('--port', port);
+    // quickPlayMultiplayer автоматически подключает к серверу
+    gameArgs.push('--quickPlayMultiplayer', SERVER_ADDRESS);
   }
 
   const allArgs = [...jvmArgs, ...gameArgs];
