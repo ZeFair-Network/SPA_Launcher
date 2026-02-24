@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'path';
 import { registerIpcHandlers } from './ipc-handlers';
+import { updateManager } from './updater/update-manager';
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -42,6 +43,9 @@ function createWindow(): void {
   });
 
   registerIpcHandlers(mainWindow);
+
+  // Setup update manager
+  updateManager.setMainWindow(mainWindow);
 
   // Window control IPC
   const { ipcMain } = require('electron');

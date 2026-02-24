@@ -1,0 +1,217 @@
+/**
+ * Force Minecraft Styles
+ * Ultra-high specificity overrides for stubborn elements
+ */
+
+/* ==================== BACKGROUND FORCE ==================== */
+
+/* Force biome gradient background */
+body,
+html,
+#root {
+  background: var(--biome-bg-gradient) !important;
+  background-attachment: fixed !important;
+  background-size: cover !important;
+  position: relative !important;
+}
+
+/* Main content background with texture */
+.app-layout,
+.main-content {
+  background: transparent !important;
+  position: relative !important;
+}
+
+/* Add noise texture overlay to body */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.3;
+}
+
+/* Vignette effect for depth */
+.app-layout::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Ensure content is above background effects */
+.app-layout > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* ==================== PLAY BUTTON FORCE ==================== */
+
+/* Maximum specificity for play button */
+.home-page .play-section button.play-btn,
+.home-page .play-section .play-btn,
+div.home-page div.play-section button.play-btn,
+button.play-btn[class*="play"] {
+  /* Remove all gradients */
+  background: var(--mc-button-bg) !important;
+  background-image: none !important;
+
+  /* MC border radius */
+  border-radius: 6px !important;
+  -webkit-border-radius: 6px !important;
+  -moz-border-radius: 6px !important;
+
+  /* Remove filters */
+  filter: none !important;
+  -webkit-filter: none !important;
+
+  /* MC 3D shadow - CRITICAL */
+  box-shadow:
+    inset -3px -6px 0 rgba(0, 0, 0, 0.4) !important,
+    inset 3px 3px 0 rgba(255, 255, 255, 0.4) !important,
+    0 8px 16px rgba(0, 0, 0, 0.4) !important,
+    0 0 30px var(--biome-accent-glow) !important;
+  -webkit-box-shadow:
+    inset -3px -6px 0 rgba(0, 0, 0, 0.4),
+    inset 3px 3px 0 rgba(255, 255, 255, 0.4),
+    0 8px 16px rgba(0, 0, 0, 0.4),
+    0 0 30px var(--biome-accent-glow) !important;
+}
+
+/* Force hover state */
+.home-page .play-section button.play-btn:hover:not(:disabled),
+button.play-btn:hover:not(:disabled) {
+  background: var(--mc-button-bg) !important;
+  background-image: none !important;
+  filter: brightness(1.15) !important;
+  -webkit-filter: brightness(1.15) !important;
+
+  box-shadow:
+    inset -3px -6px 0 rgba(0, 0, 0, 0.4) !important,
+    inset 3px 3px 0 rgba(255, 255, 255, 0.5) !important,
+    0 12px 24px rgba(0, 0, 0, 0.5) !important,
+    0 0 40px var(--biome-accent-glow) !important;
+}
+
+/* Force active state */
+.home-page .play-section button.play-btn:active:not(:disabled),
+button.play-btn:active:not(:disabled) {
+  background: var(--mc-button-bg) !important;
+  background-image: none !important;
+  filter: brightness(1) !important;
+
+  box-shadow:
+    inset 3px 6px 0 rgba(0, 0, 0, 0.6) !important,
+    inset -2px -2px 0 rgba(255, 255, 255, 0.2) !important,
+    0 4px 8px rgba(0, 0, 0, 0.3) !important,
+    0 0 20px var(--biome-accent-glow) !important;
+}
+
+/* ==================== REMOVE ALL ROUNDED CORNERS ==================== */
+
+/* Force square corners on all major containers */
+.app-layout,
+.main-content,
+.sidebar,
+body,
+html {
+  border-radius: 0 !important;
+}
+
+/* MC corners for cards */
+.glass-card,
+.mc-card,
+.settings-section,
+.mod-item,
+.news-card,
+.login-form {
+  border-radius: 6px !important;
+  -webkit-border-radius: 6px !important;
+}
+
+/* ==================== FORCE PIXELATED RENDERING ==================== */
+
+h1, h2, h3, h4, h5, h6,
+.mc-text,
+.mc-button,
+.play-btn,
+.nav-item,
+.titlebar-title,
+button.play-btn,
+.server-info h2 {
+  image-rendering: pixelated !important;
+  image-rendering: -moz-crisp-edges !important;
+  image-rendering: crisp-edges !important;
+  -webkit-font-smoothing: none !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* ==================== FORCE MC FONT ON HEADINGS ==================== */
+
+.server-info h2,
+h1.server-title,
+.home-page h2 {
+  font-family: var(--font-minecraft) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+
+  /* Remove gradient text fill */
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: initial !important;
+  background-clip: initial !important;
+
+  /* MC text shadow */
+  color: var(--biome-primary) !important;
+  text-shadow:
+    3px 3px 0 rgba(0, 0, 0, 0.7) !important,
+    0 0 20px var(--biome-accent-glow) !important;
+}
+
+/* ==================== FORCE REMOVE BACKDROP FILTERS ==================== */
+
+.glass-card,
+.glass-panel,
+.sidebar,
+.titlebar,
+.login-form,
+input,
+select,
+textarea {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* ==================== FORCE REMOVE ALL BORDERS ==================== */
+
+/* Remove all borders that create visible lines */
+.titlebar,
+.sidebar,
+.sidebar-header,
+.sidebar-footer {
+  border: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  border-left: none !important;
+  border-right: none !important;
+}
+
+/* Keep only the sidebar right border from minecraft-overrides */
+.sidebar {
+  border-right: 3px solid var(--biome-border-primary) !important;
+}
+
+/* ==================== BIOME SPECIFIC PLAY BUTTON ==================== */
+
+/* Ice Spikes biome */
+[data-biome="ice-spikes"] button.play-btn {
+  background: linear-gradient(135deg, #0ea5e9, #0284c7) !important;
+}

@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import ProgressBar from '../components/ProgressBar';
+import { motion } from 'framer-motion';
+import { Play, Download, Loader2, Gamepad2 } from 'lucide-react';
+import { MCProgressBar } from '../components/minecraft';
 
 type Status = 'checking' | 'ready' | 'downloading' | 'installing-fabric' | 'launching' | 'running';
 
@@ -118,35 +120,64 @@ export default function HomePage() {
     return 'play-btn';
   }
 
+  function getButtonIcon() {
+    switch (status) {
+      case 'checking': return <Loader2 size={20} className="spin" />;
+      case 'downloading': return <Download size={20} />;
+      case 'installing-fabric': return <Loader2 size={20} className="spin" />;
+      case 'launching': return <Loader2 size={20} className="spin" />;
+      case 'running': return <Gamepad2 size={20} />;
+      default: return <Play size={20} />;
+    }
+  }
+
   const isDisabled = status !== 'ready';
 
   return (
     <div className="home-page">
-      <div className="home-bg" />
+      <div className="home-bg-glow" />
 
       <div className="server-info">
         <h2>SP.A</h2>
-        <p>Minecraft Fabric Server</p>
-        <p className="server-address">spa.ado-dokidokihimitsukichi-daigakuimo.ru</p>
       </div>
 
       <div className="play-section">
-        <button
+        <motion.button
           className={getButtonClass()}
           onClick={handlePlay}
           disabled={isDisabled}
+          whileHover={!isDisabled ? { scale: 1.05 } : {}}
+          whileTap={!isDisabled ? { scale: 0.95 } : {}}
+          animate={status === 'ready' ? {
+            boxShadow: [
+              '0 0 20px rgba(139, 92, 246, 0.4)',
+              '0 0 40px rgba(139, 92, 246, 0.6)',
+              '0 0 20px rgba(139, 92, 246, 0.4)'
+            ]
+          } : {}}
+          transition={{ duration: 2, repeat: Infinity }}
         >
-          {getButtonText()}
-        </button>
+          {getButtonIcon()}
+          <span>{getButtonText()}</span>
+        </motion.button>
 
         {(status === 'downloading' || status === 'installing-fabric') && (
-          <ProgressBar percent={progress.percent} status={progress.status} />
+          <div className="progress-container">
+            <MCProgressBar
+              value={progress.percent}
+              max={100}
+              type="xp"
+              showLabel
+              label={progress.status}
+              animated
+            />
+          </div>
         )}
 
         {error && <div className="play-status" style={{ color: 'var(--danger)' }}>{error}</div>}
 
         {status === 'ready' && (
-          <div className="play-status">Minecraft 1.21.1 + Fabric</div>
+          <div className="play-status">Minecraft 1.21.11</div>
         )}
       </div>
 

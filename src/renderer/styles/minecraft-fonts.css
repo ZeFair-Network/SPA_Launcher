@@ -1,0 +1,61 @@
+/**
+ * Minecraft Fonts
+ * Pixel-style fonts for authentic Minecraft look
+ */
+
+/* Monocraft - Modern Minecraft-style font */
+@import url('https://fonts.googleapis.com/css2?family=Monocraft&display=swap');
+
+/* Press Start 2P - Retro pixel font (backup) */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* VT323 - Pixel monospace font (alternative) */
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+/* ==================== FONT FACE DEFINITIONS ==================== */
+
+:root {
+  /* Primary Minecraft font stack */
+  --font-minecraft: 'Monocraft', 'Press Start 2P', 'VT323', 'Courier New', monospace;
+
+  /* Fallback for body text (more readable) */
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Headings font */
+  --font-heading: 'Monocraft', 'Press Start 2P', monospace;
+}
+
+/* ==================== APPLY MINECRAFT FONT ==================== */
+
+/* Headings use pixel font */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* MC components use pixel font */
+.mc-text,
+.mc-button,
+.mc-card,
+.titlebar-title,
+.nav-item,
+.biome-option__name {
+  font-family: var(--font-minecraft);
+  image-rendering: pixelated;
+  letter-spacing: 0.02em;
+}
+
+/* Body text remains readable */
+body {
+  font-family: var(--font-body);
+}
+
+/* But allow forcing Minecraft font */
+.force-minecraft-font {
+  font-family: var(--font-minecraft) !important;
+  image-rendering: pixelated;
+}

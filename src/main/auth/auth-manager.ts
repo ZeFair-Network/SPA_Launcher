@@ -1,8 +1,7 @@
 import fetch from 'node-fetch';
 import { storeGet, storeSet } from '../utils/store';
 
-// TODO: заменить на адрес вашего API-сервера
-const API_URL = 'http://93.123.84.190:3000';
+const API_URL = 'http://65.108.142.218:7895';
 
 interface AuthData {
   username: string;

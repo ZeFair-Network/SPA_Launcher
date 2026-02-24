@@ -90,6 +90,9 @@ export async function launchGame(
     `-Djava.library.path=${nativesDir}`,
     '-Dminecraft.launcher.brand=spa-launcher',
     '-Dminecraft.launcher.version=1.0.0',
+    `-Dspa.auth.token=${accessToken}`, // JWT токен для SPAAuth мода
+    `-Dspa.auth.username=${username}`, // Username для проверки
+    `-Dspa.api.url=${MINECRAFT_CONFIG.apiServer}/api`, // API URL для модов
   ];
 
   // Custom JVM args

@@ -1,0 +1,86 @@
+/**
+ * BiomeEffects Styles
+ * Visual effects and particles for each biome
+ */
+
+/* ==================== BIOME EFFECTS WRAPPER ==================== */
+
+.biome-effects-wrapper {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ==================== PARTICLE CONTAINER ==================== */
+
+.biome-particles-container {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: var(--z-particles, -1);
+  clip-path: inset(0);
+}
+
+/* ==================== AMBIENT GLOW ==================== */
+
+/* Defined in biome-specific CSS files, this is the base */
+.biome-ambient-glow {
+  position: fixed;
+  pointer-events: none;
+  z-index: var(--z-background, -2);
+}
+
+/* ==================== BASE PARTICLE ==================== */
+
+.particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* ==================== ICE SPIKES EFFECTS ==================== */
+
+/* Frost vignette - already defined in ice-spikes.css */
+.frost-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: var(--z-particles, -1);
+}
+
+/* ==================== PERFORMANCE OPTIMIZATIONS ==================== */
+
+/* Reduce animations on low-end devices */
+@media (prefers-reduced-motion: reduce) {
+  .particle {
+    animation: none !important;
+    opacity: 0.3;
+  }
+
+  .biome-ambient-glow {
+    animation: none !important;
+    opacity: 0.5;
+  }
+
+  .frost-vignette {
+    display: none;
+  }
+}
+
+/* Disable particles on mobile for better performance */
+@media (max-width: 768px) {
+  .biome-particles-container {
+    display: none;
+  }
+
+  /* Keep subtle ambient effects */
+  .biome-ambient-glow {
+    opacity: 0.3;
+  }
+}

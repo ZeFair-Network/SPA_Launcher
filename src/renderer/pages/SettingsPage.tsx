@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import ProgressBar from '../components/ProgressBar';
+import { MCProgressBar } from '../components/minecraft';
+import BiomeThemeSwitcher from '../components/BiomeThemeSwitcher';
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState({
@@ -81,8 +82,13 @@ export default function SettingsPage() {
     <div className="settings-page">
       <h2>Настройки</h2>
 
+      {/* Biome Theme */}
+      <div className="settings-section glass-card">
+        <BiomeThemeSwitcher />
+      </div>
+
       {/* Skin */}
-      <div className="settings-section">
+      <div className="settings-section glass-card">
         <h3>Скин</h3>
 
         <div className="setting-row">
@@ -110,7 +116,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Java */}
-      <div className="settings-section">
+      <div className="settings-section glass-card">
         <h3>Java</h3>
 
         <div className="setting-row">
@@ -131,7 +137,14 @@ export default function SettingsPage() {
 
         {javaDownloading && (
           <div style={{ marginTop: 12 }}>
-            <ProgressBar percent={javaProgress.percent} status={javaProgress.status} />
+            <MCProgressBar
+              value={javaProgress.percent}
+              max={100}
+              type="xp"
+              showLabel
+              label={javaProgress.status}
+              animated
+            />
           </div>
         )}
 
@@ -147,7 +160,7 @@ export default function SettingsPage() {
       </div>
 
       {/* RAM */}
-      <div className="settings-section">
+      <div className="settings-section glass-card">
         <h3>Память (RAM)</h3>
 
         <div className="setting-row">
@@ -182,7 +195,7 @@ export default function SettingsPage() {
       </div>
 
       {/* JVM Args */}
-      <div className="settings-section">
+      <div className="settings-section glass-card">
         <h3>Дополнительно</h3>
 
         <div className="setting-row">

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 
 interface Props {
   onLogin: (username: string, password: string) => Promise<{ success: boolean; error?: string }>;
@@ -38,7 +39,13 @@ export default function LoginForm({ onLogin, onRegister }: Props) {
 
   return (
     <div className="login-overlay">
-      <form className="login-form" onSubmit={handleSubmit}>
+      <motion.form
+        className="login-form glass-card"
+        onSubmit={handleSubmit}
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3 }}
+      >
         <h2>SP.A</h2>
         <p>{isRegister ? 'Создайте аккаунт' : 'Войдите, чтобы начать играть'}</p>
 
@@ -93,7 +100,7 @@ export default function LoginForm({ onLogin, onRegister }: Props) {
         >
           {isRegister ? 'Уже есть аккаунт? Войти' : 'Нет аккаунта? Зарегистрироваться'}
         </button>
-      </form>
+      </motion.form>
     </div>
   );
 }

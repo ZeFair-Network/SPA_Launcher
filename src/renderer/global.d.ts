@@ -50,5 +50,35 @@ interface Window {
     minimizeWindow: () => Promise<void>;
     maximizeWindow: () => Promise<void>;
     closeWindow: () => Promise<void>;
+
+    // Updates
+    checkForUpdates: () => Promise<{
+      success: boolean;
+      data?: {
+        updateAvailable: boolean;
+        version?: string;
+        releaseDate?: string;
+        changelog?: string[];
+        required?: boolean;
+        downloadUrl?: string;
+        fileSize?: number;
+      };
+      error?: string;
+    }>;
+    downloadUpdate: (downloadUrl: string) => Promise<{ success: boolean; filePath?: string; error?: string }>;
+    installUpdate: (filePath?: string) => Promise<{ success: boolean; error?: string }>;
+    onUpdateAvailable: (cb: (data: {
+      version: string;
+      releaseDate: string;
+      changelog: string[];
+      required: boolean;
+      downloadUrl: string;
+      fileSize: number;
+    }) => void) => () => void;
+    onUpdateNotAvailable: (cb: () => void) => () => void;
+    onUpdateDownloadProgress: (cb: (data: { percent: number; downloaded: number; total: number }) => void) => () => void;
+    onUpdateDownloaded: (cb: (data: { filePath: string }) => void) => () => void;
+    onUpdateError: (cb: (data: { message: string }) => void) => () => void;
+    onUpdateRequired: (cb: (data: any) => void) => () => void;
   };
 }

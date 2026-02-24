@@ -73,4 +73,39 @@ contextBridge.exposeInMainWorld('api', {
   minimizeWindow: () => ipcRenderer.invoke('window:minimize'),
   maximizeWindow: () => ipcRenderer.invoke('window:maximize'),
   closeWindow: () => ipcRenderer.invoke('window:close'),
+
+  // Updates
+  checkForUpdates: () => ipcRenderer.invoke('updates:check'),
+  downloadUpdate: (downloadUrl: string) => ipcRenderer.invoke('updates:download', downloadUrl),
+  installUpdate: (filePath?: string) => ipcRenderer.invoke('updates:install', filePath),
+  onUpdateAvailable: (cb: (data: any) => void) => {
+    const handler = (_event: any, data: any) => cb(data);
+    ipcRenderer.on('update-available', handler);
+    return () => ipcRenderer.removeListener('update-available', handler);
+  },
+  onUpdateNotAvailable: (cb: () => void) => {
+    const handler = () => cb();
+    ipcRenderer.on('update-not-available', handler);
+    return () => ipcRenderer.removeListener('update-not-available', handler);
+  },
+  onUpdateDownloadProgress: (cb: (data: { percent: number; downloaded: number; total: number }) => void) => {
+    const handler = (_event: any, data: any) => cb(data);
+    ipcRenderer.on('update-download-progress', handler);
+    return () => ipcRenderer.removeListener('update-download-progress', handler);
+  },
+  onUpdateDownloaded: (cb: (data: { filePath: string }) => void) => {
+    const handler = (_event: any, data: any) => cb(data);
+    ipcRenderer.on('update-downloaded', handler);
+    return () => ipcRenderer.removeListener('update-downloaded', handler);
+  },
+  onUpdateError: (cb: (data: { message: string }) => void) => {
+    const handler = (_event: any, data: any) => cb(data);
+    ipcRenderer.on('update-error', handler);
+    return () => ipcRenderer.removeListener('update-error', handler);
+  },
+  onUpdateRequired: (cb: (data: any) => void) => {
+    const handler = (_event: any, data: any) => cb(data);
+    ipcRenderer.on('update-required', handler);
+    return () => ipcRenderer.removeListener('update-required', handler);
+  },
 });

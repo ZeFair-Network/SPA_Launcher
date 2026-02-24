@@ -1,0 +1,315 @@
+/**
+ * MCProgressBar Styles - Minecraft-inspired progress bars
+ * Automatically adapts to biome themes
+ */
+
+/* ==================== PROGRESS WRAPPER ==================== */
+
+.mc-progress-wrapper {
+  width: 100%;
+}
+
+.mc-progress-label {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--biome-text-secondary);
+  text-align: center;
+}
+
+/* ==================== BASE PROGRESS BAR ==================== */
+
+.mc-progress {
+  position: relative;
+  width: 100%;
+  height: 24px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  overflow: hidden;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+
+  /* Minecraft-style borders */
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.5),
+    0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Background */
+.mc-progress__bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+}
+
+/* Fill */
+.mc-progress__fill {
+  position: relative;
+  height: 100%;
+  background: var(--mc-progress-fill);
+  transition: width 0.3s ease;
+  border-radius: 4px 0 0 4px;
+
+  /* Inner shadow for depth */
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.3);
+}
+
+.mc-progress__fill[style*="width: 100%"] {
+  border-radius: 4px;
+}
+
+/* Shine effect */
+.mc-progress__shine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to bottom,
+    rgba(255, 255, 255, 0.3) 0%,
+    transparent 100%
+  );
+  border-radius: 4px 4px 0 0;
+}
+
+/* ==================== ANIMATED FILL ==================== */
+
+.mc-progress--animated .mc-progress__fill {
+  position: relative;
+  overflow: hidden;
+}
+
+.mc-progress--animated .mc-progress__fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  animation: progress-shimmer 2s linear infinite;
+}
+
+@keyframes progress-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ==================== SEGMENTED PROGRESS BAR ==================== */
+
+.mc-progress--segmented {
+  height: 28px;
+}
+
+.mc-progress__segments {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  z-index: 2;
+}
+
+.mc-progress__segment {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.mc-progress__segment--filled {
+  background: var(--biome-accent);
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.3),
+    0 0 4px var(--biome-accent-glow);
+}
+
+/* ==================== PROGRESS TYPES ==================== */
+
+/* Default - uses biome colors */
+.mc-progress--default .mc-progress__fill {
+  background: var(--mc-progress-fill);
+}
+
+/* XP Bar (green gradient like in Minecraft) */
+.mc-progress--xp .mc-progress__fill {
+  background: linear-gradient(to bottom,
+    #80ff00 0%,
+    #66cc00 50%,
+    #4d9900 100%
+  );
+}
+
+.mc-progress--xp {
+  height: 20px;
+}
+
+/* Health Bar (red hearts) */
+.mc-progress--health {
+  height: 28px;
+}
+
+.mc-progress--health .mc-progress__fill {
+  background: linear-gradient(to bottom,
+    #ff5555 0%,
+    #ff0000 50%,
+    #cc0000 100%
+  );
+}
+
+/* Hunger Bar (drumstick icons) */
+.mc-progress--hunger {
+  height: 28px;
+}
+
+.mc-progress--hunger .mc-progress__fill {
+  background: linear-gradient(to bottom,
+    #ff9955 0%,
+    #ff6600 50%,
+    #cc5200 100%
+  );
+}
+
+/* ==================== VALUE DISPLAY ==================== */
+
+.mc-progress__value {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* ==================== BIOME-SPECIFIC STYLES ==================== */
+
+/* End biome - purple XP */
+[data-biome="end"] .mc-progress--xp .mc-progress__fill {
+  background: linear-gradient(to bottom,
+    #c084fc 0%,
+    #8b5cf6 50%,
+    #7c3aed 100%
+  );
+}
+
+/* Nether biome - lava XP */
+[data-biome="nether"] .mc-progress--xp .mc-progress__fill {
+  background: linear-gradient(to bottom,
+    #fbbf24 0%,
+    #f59e0b 30%,
+    #dc2626 70%,
+    #991b1b 100%
+  );
+  animation: lava-flow 2s ease-in-out infinite;
+}
+
+@keyframes lava-flow {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.2);
+  }
+}
+
+/* Ice Spikes biome - frozen XP */
+[data-biome="ice-spikes"] .mc-progress--xp .mc-progress__fill {
+  background: linear-gradient(to bottom,
+    #e0f2fe 0%,
+    #7dd3fc 30%,
+    #0ea5e9 70%,
+    #0284c7 100%
+  );
+  box-shadow:
+    inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+    0 0 10px rgba(6, 182, 212, 0.5);
+}
+
+/* Forest biome - nature XP */
+[data-biome="forest"] .mc-progress--xp .mc-progress__fill {
+  background: linear-gradient(to bottom,
+    #6ee7b7 0%,
+    #34d399 30%,
+    #10b981 70%,
+    #047857 100%
+  );
+}
+
+/* Desert biome - sand XP */
+[data-biome="desert"] .mc-progress--xp .mc-progress__fill {
+  background: linear-gradient(to bottom,
+    #fef3c7 0%,
+    #fde68a 20%,
+    #fbbf24 50%,
+    #f59e0b 80%,
+    #d97706 100%
+  );
+}
+
+/* ==================== SPECIAL EFFECTS ==================== */
+
+/* Pulsing effect for low values */
+.mc-progress__fill[style*="width: 0%"],
+.mc-progress__fill[style*="width: 1%"],
+.mc-progress__fill[style*="width: 2%"],
+.mc-progress__fill[style*="width: 3%"],
+.mc-progress__fill[style*="width: 4%"],
+.mc-progress__fill[style*="width: 5%"] {
+  animation: low-health-pulse 1s ease-in-out infinite;
+}
+
+@keyframes low-health-pulse {
+  0%, 100% {
+    opacity: 0.6;
+    filter: brightness(0.8);
+  }
+  50% {
+    opacity: 1;
+    filter: brightness(1.2);
+  }
+}
+
+/* ==================== SIZES ==================== */
+
+.mc-progress--small {
+  height: 16px;
+}
+
+.mc-progress--large {
+  height: 32px;
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 768px) {
+  .mc-progress {
+    height: 20px;
+  }
+
+  .mc-progress--xp {
+    height: 16px;
+  }
+
+  .mc-progress--health,
+  .mc-progress--hunger {
+    height: 24px;
+  }
+
+  .mc-progress__value {
+    font-size: 10px;
+  }
+}

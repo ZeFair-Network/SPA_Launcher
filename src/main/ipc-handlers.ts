@@ -5,6 +5,7 @@ import { installFabric, isFabricInstalled } from './minecraft/fabric';
 import { getModsList, syncMods, toggleMod, deleteMod, addMod, openModsFolder } from './minecraft/mods';
 import { launchGame, isGameRunning, getSettings, saveSettings, LaunchSettings } from './minecraft/launcher';
 import { findJava, downloadJava } from './utils/java';
+import { updateManager } from './updater/update-manager';
 
 export function registerIpcHandlers(mainWindow: BrowserWindow): void {
   // Auth
@@ -197,5 +198,33 @@ export function registerIpcHandlers(mainWindow: BrowserWindow): void {
 
   ipcMain.handle('game:is-running', async () => {
     return isGameRunning();
+  });
+
+  // Updates
+  ipcMain.handle('updates:check', async () => {
+    try {
+      const updateInfo = await updateManager.checkForUpdates();
+      return { success: true, data: updateInfo };
+    } catch (err: any) {
+      return { success: false, error: err.message };
+    }
+  });
+
+  ipcMain.handle('updates:download', async (_event, downloadUrl: string) => {
+    try {
+      const filePath = await updateManager.downloadUpdate(downloadUrl);
+      return { success: true, filePath };
+    } catch (err: any) {
+      return { success: false, error: err.message };
+    }
+  });
+
+  ipcMain.handle('updates:install', async (_event, filePath?: string) => {
+    try {
+      updateManager.installUpdate(filePath);
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err.message };
+    }
   });
 }

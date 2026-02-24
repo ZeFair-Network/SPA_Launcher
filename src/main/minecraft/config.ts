@@ -10,7 +10,7 @@ export const MINECRAFT_CONFIG = {
   serverAddress: 'spa.ado-dokidokihimitsukichi-daigakuimo.ru',
 
   // API сервер для загрузки ресурсов
-  apiServer: 'http://93.123.84.190:3000',
+  apiServer: 'http://65.108.142.218:7895',
 
   // Использовать локальный API вместо Mojang серверов
   // true = быстрая загрузка с вашего сервера

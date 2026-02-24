@@ -70,18 +70,22 @@ export async function syncMods(
   }
 
   // 3. Remove local mods not on server
-  const localFiles = fs.readdirSync(modsDir).filter((f) => f.endsWith('.jar'));
-  for (const localFile of localFiles) {
-    if (!serverFileNames.has(localFile)) {
-      fs.unlinkSync(path.join(modsDir, localFile));
+  // ВАЖНО: Удаляем локальные моды ТОЛЬКО если сервер вернул непустой список
+  // Это защищает от случайного удаления всех модов при ошибке сервера
+  if (serverMods.length > 0) {
+    const localFiles = fs.readdirSync(modsDir).filter((f) => f.endsWith('.jar'));
+    for (const localFile of localFiles) {
+      if (!serverFileNames.has(localFile)) {
+        fs.unlinkSync(path.join(modsDir, localFile));
+      }
     }
-  }
-  // Also clean up disabled mods not on server
-  const disabledFiles = fs.readdirSync(modsDir).filter((f) => f.endsWith('.jar.disabled'));
-  for (const disabledFile of disabledFiles) {
-    const originalName = disabledFile.replace('.disabled', '');
-    if (!serverFileNames.has(originalName)) {
-      fs.unlinkSync(path.join(modsDir, disabledFile));
+    // Also clean up disabled mods not on server
+    const disabledFiles = fs.readdirSync(modsDir).filter((f) => f.endsWith('.jar.disabled'));
+    for (const disabledFile of disabledFiles) {
+      const originalName = disabledFile.replace('.disabled', '');
+      if (!serverFileNames.has(originalName)) {
+        fs.unlinkSync(path.join(modsDir, disabledFile));
+      }
     }
   }
 

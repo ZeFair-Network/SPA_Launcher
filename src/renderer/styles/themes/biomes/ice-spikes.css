@@ -1,0 +1,173 @@
+/**
+ * ICE SPIKES BIOME THEME
+ * Blue/Cyan frozen aesthetic with snow particles
+ */
+
+[data-biome="ice-spikes"] {
+  /* ==================== PRIMARY COLORS ==================== */
+  --biome-primary: #0ea5e9;
+  --biome-primary-dark: #0284c7;
+  --biome-primary-light: #38bdf8;
+
+  --biome-secondary: #0c4a6e;
+  --biome-secondary-light: #075985;
+
+  --biome-accent: #06b6d4;
+  --biome-accent-glow: rgba(6, 182, 212, 0.5);
+
+  /* ==================== BACKGROUND ==================== */
+  --biome-bg-primary: rgba(15, 23, 42, 0.95);
+  --biome-bg-secondary: rgba(30, 41, 59, 0.9);
+  --biome-bg-tertiary: rgba(51, 65, 85, 0.85);
+
+  /* Gradient background */
+  --biome-bg-gradient: linear-gradient(135deg,
+    #0f172a 0%,
+    #1e293b 25%,
+    #0c4a6e 75%,
+    #075985 100%
+  );
+
+  /* ==================== TEXT COLORS ==================== */
+  --biome-text-primary: #f0f9ff;
+  --biome-text-secondary: #bae6fd;
+  --biome-text-tertiary: #7dd3fc;
+
+  /* ==================== BORDERS ==================== */
+  --biome-border-primary: rgba(30, 41, 59, 0.9);
+  --biome-border-secondary: rgba(30, 41, 59, 0.7);
+
+  /* ==================== MINECRAFT COMPONENTS ==================== */
+
+  /* Button - Ice / Packed Ice style */
+  --mc-button-bg: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  --mc-button-bg-hover: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+  --mc-button-texture: url("data:image/svg+xml,%3Csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpattern id='ice' width='4' height='4' patternUnits='userSpaceOnUse'%3E%3Crect width='4' height='4' fill='%230ea5e9' opacity='0.3'/%3E%3Cpath d='M0,2 L2,0 L4,2 L2,4 Z' fill='%23ffffff' opacity='0.2'/%3E%3C/pattern%3E%3Crect width='16' height='16' fill='url(%23ice)'/%3E%3C/svg%3E");
+
+  /* Card - Snow Block / Frosted Ice style */
+  --mc-card-bg: rgba(14, 165, 233, 0.15);
+  --mc-card-texture: url("data:image/svg+xml,%3Csvg width='32' height='32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpattern id='snow' width='8' height='8' patternUnits='userSpaceOnUse'%3E%3Crect width='8' height='8' fill='%23f0f9ff'/%3E%3Ccircle cx='2' cy='2' r='1' fill='%23e0f2fe' opacity='0.6'/%3E%3Ccircle cx='6' cy='6' r='1' fill='%23e0f2fe' opacity='0.6'/%3E%3C/pattern%3E%3Crect width='32' height='32' fill='url(%23snow)'/%3E%3C/svg%3E");
+
+  /* Progress - Ice crystal style */
+  --mc-progress-fill: linear-gradient(to bottom,
+    #e0f2fe 0%,
+    #7dd3fc 30%,
+    #0ea5e9 70%,
+    #0284c7 100%
+  );
+
+  /* ==================== PARTICLE EFFECTS ==================== */
+  --particle-primary: #bae6fd;
+  --particle-secondary: #7dd3fc;
+  --particle-tertiary: #38bdf8;
+
+  /* ==================== GLOW EFFECTS ==================== */
+  --glow-primary: 0 0 20px rgba(6, 182, 212, 0.7);
+  --glow-strong: 0 0 40px rgba(14, 165, 233, 0.9);
+
+  /* ==================== SPECIAL EFFECTS ==================== */
+  --portal-color: #0ea5e9;
+  --portal-glow: 0 0 60px rgba(14, 165, 233, 0.8);
+}
+
+/* ==================== ICE SPIKES-SPECIFIC ANIMATIONS ==================== */
+
+[data-biome="ice-spikes"] .biome-ambient-glow {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: max(1000px, 100vw);
+  height: max(1000px, 100vh);
+  background: radial-gradient(circle,
+    rgba(14, 165, 233, 0.15) 0%,
+    rgba(6, 182, 212, 0.08) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: var(--z-background);
+  animation: frost-pulse 5s ease-in-out infinite;
+}
+
+@keyframes frost-pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1.03);
+  }
+}
+
+/* Snowflake particles */
+[data-biome="ice-spikes"] .particle {
+  background: var(--particle-primary);
+  box-shadow: 0 0 6px var(--particle-primary);
+  animation: snowfall 4s linear infinite;
+  border-radius: 50%;
+}
+
+@keyframes snowfall {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) rotate(0deg);
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(100vh) rotate(360deg);
+  }
+}
+
+/* Frost vignette effect */
+[data-biome="ice-spikes"] .frost-vignette {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle,
+    transparent 30%,
+    rgba(14, 165, 233, 0.05) 70%,
+    rgba(14, 165, 233, 0.15) 100%
+  );
+  pointer-events: none;
+  z-index: var(--z-particles);
+}
+
+/* Ice crystal shimmer on buttons */
+[data-biome="ice-spikes"] .mc-button {
+  position: relative;
+  backdrop-filter: blur(8px);
+  animation: ice-shimmer 3s ease-in-out infinite;
+}
+
+@keyframes ice-shimmer {
+  0%, 100% {
+    box-shadow:
+      inset -2px -4px 0 rgba(0,0,0,0.2),
+      inset 2px 2px 0 rgba(255,255,255,0.5),
+      0 0 15px rgba(6, 182, 212, 0.3);
+  }
+  50% {
+    box-shadow:
+      inset -2px -4px 0 rgba(0,0,0,0.2),
+      inset 2px 2px 0 rgba(255,255,255,0.7),
+      0 0 25px rgba(6, 182, 212, 0.5);
+  }
+}
+
+/* Frost crystal overlay */
+[data-biome="ice-spikes"] .mc-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50,10 L50,90 M10,50 L90,50 M25,25 L75,75 M75,25 L25,75' stroke='%23ffffff' stroke-width='0.5' opacity='0.1'/%3E%3C/svg%3E");
+  background-size: 50px 50px;
+  opacity: 0.3;
+  pointer-events: none;
+  border-radius: inherit;
+}

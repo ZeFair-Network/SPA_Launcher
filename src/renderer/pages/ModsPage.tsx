@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ProgressBar from '../components/ProgressBar';
+import { MCProgressBar } from '../components/minecraft';
 
 interface ModInfo {
   fileName: string;
@@ -85,7 +85,14 @@ export default function ModsPage() {
 
       {syncing && (
         <div style={{ marginBottom: 16 }}>
-          <ProgressBar percent={syncProgress.percent} status={syncProgress.status} />
+          <MCProgressBar
+            value={syncProgress.percent}
+            max={100}
+            type="xp"
+            showLabel
+            label={syncProgress.status}
+            animated
+          />
         </div>
       )}
 
@@ -103,7 +110,7 @@ export default function ModsPage() {
       ) : (
         <div className="mods-list">
           {mods.map((mod) => (
-            <div key={mod.fileName} className="mod-item">
+            <div key={mod.fileName} className="mod-item glass-card">
               <label className="toggle-switch">
                 <input
                   type="checkbox"

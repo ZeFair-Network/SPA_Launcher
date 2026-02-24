@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Menu } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import LoginForm from './components/LoginForm';
+import UpdateNotification from './components/UpdateNotification';
+import BiomeEffects from './components/effects/BiomeEffects';
 import HomePage from './pages/HomePage';
 import SettingsPage from './pages/SettingsPage';
 import ModsPage from './pages/ModsPage';
@@ -19,12 +23,20 @@ export default function App() {
   const [page, setPage] = useState<Page>('home');
   const [auth, setAuth] = useState<AuthData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     window.api.getAuth().then((data) => {
       setAuth(data);
       setLoading(false);
     });
+
+    // Проверка обновлений при запуске (через 3 секунды)
+    setTimeout(() => {
+      window.api.checkForUpdates().catch((err) => {
+        console.error('Failed to check for updates:', err);
+      });
+    }, 3000);
   }, []);
 
   const handleLogin = async (username: string, password: string) => {
@@ -46,6 +58,12 @@ export default function App() {
   const handleLogout = async () => {
     await window.api.logout();
     setAuth(null);
+    setMobileMenuOpen(false);
+  };
+
+  const handleNavigate = (newPage: Page) => {
+    setPage(newPage);
+    setMobileMenuOpen(false);
   };
 
   if (loading) {
@@ -61,17 +79,37 @@ export default function App() {
 
   return (
     <>
+      <BiomeEffects />
       <TitleBar />
+      <UpdateNotification />
       <div className="app-layout">
         {!auth ? (
           <LoginForm onLogin={handleLogin} onRegister={handleRegister} />
         ) : (
           <>
+            {/* Mobile menu toggle */}
+            <motion.button
+              className="mobile-menu-toggle"
+              onClick={() => setMobileMenuOpen(true)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Menu size={20} />
+            </motion.button>
+
+            {/* Mobile sidebar overlay */}
+            <div
+              className={`sidebar-overlay ${mobileMenuOpen ? 'visible' : ''}`}
+              onClick={() => setMobileMenuOpen(false)}
+            />
+
             <Sidebar
               currentPage={page}
-              onNavigate={setPage}
+              onNavigate={handleNavigate}
               username={auth.username}
               onLogout={handleLogout}
+              mobileOpen={mobileMenuOpen}
+              onMobileClose={() => setMobileMenuOpen(false)}
             />
             <div className="main-content">
               {page === 'home' && <HomePage />}

@@ -1,0 +1,164 @@
+/**
+ * Biome Base Theme System
+ * SP.A Launcher - Minecraft-Inspired Design
+ *
+ * This file defines the structure for biome-based theming.
+ * Each biome overrides these CSS variables with their own values.
+ */
+
+:root {
+  /* ==================== BIOME COLOR SYSTEM ==================== */
+
+  /* Primary colors */
+  --biome-primary: #8b5cf6;
+  --biome-primary-dark: #5b21b6;
+  --biome-primary-light: #a78bfa;
+
+  /* Secondary colors */
+  --biome-secondary: #1e1b4b;
+  --biome-secondary-light: #312e81;
+
+  /* Accent colors */
+  --biome-accent: #c084fc;
+  --biome-accent-glow: rgba(192, 132, 252, 0.5);
+
+  /* Background colors */
+  --biome-bg-primary: rgba(10, 10, 18, 0.95);
+  --biome-bg-secondary: rgba(26, 26, 43, 0.9);
+  --biome-bg-tertiary: rgba(36, 36, 56, 0.85);
+
+  /* Text colors */
+  --biome-text-primary: #f8fafc;
+  --biome-text-secondary: #cbd5e1;
+  --biome-text-tertiary: #94a3b8;
+
+  /* Border colors */
+  --biome-border-primary: rgba(139, 92, 246, 0.3);
+  --biome-border-secondary: rgba(139, 92, 246, 0.15);
+
+  /* ==================== MINECRAFT COMPONENT COLORS ==================== */
+
+  /* Button */
+  --mc-button-bg: linear-gradient(135deg, var(--biome-primary), var(--biome-primary-dark));
+  --mc-button-text: var(--biome-text-primary);
+  --mc-button-border-light: rgba(255, 255, 255, 0.3);
+  --mc-button-border-dark: rgba(0, 0, 0, 0.3);
+  --mc-button-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+
+  /* Card */
+  --mc-card-bg: var(--biome-bg-secondary);
+  --mc-card-border-light: rgba(255, 255, 255, 0.2);
+  --mc-card-border-dark: rgba(0, 0, 0, 0.5);
+  --mc-card-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+
+  /* Progress Bar */
+  --mc-progress-bg: rgba(0, 0, 0, 0.3);
+  --mc-progress-fill: var(--biome-primary);
+  --mc-progress-shine: rgba(255, 255, 255, 0.3);
+
+  /* Input */
+  --mc-input-bg: rgba(0, 0, 0, 0.3);
+  --mc-input-border: rgba(255, 255, 255, 0.2);
+  --mc-input-text: var(--biome-text-primary);
+
+  /* ==================== TEXTURE OVERLAYS ==================== */
+
+  /* Base64 encoded pixel textures (fallbacks) */
+  --texture-stone: url("data:image/svg+xml,%3Csvg width='8' height='8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpattern id='grid' width='4' height='4' patternUnits='userSpaceOnUse'%3E%3Cpath d='M 4 0 L 0 0 0 4' fill='none' stroke='rgba(0,0,0,0.1)' stroke-width='0.5'/%3E%3C/pattern%3E%3Crect width='8' height='8' fill='url(%23grid)'/%3E%3C/svg%3E");
+
+  /* ==================== PARTICLE EFFECTS ==================== */
+
+  /* Particle colors */
+  --particle-primary: var(--biome-primary);
+  --particle-secondary: var(--biome-accent);
+  --particle-count: 50;
+
+  /* ==================== GLASSMORPHISM ==================== */
+
+  --glass-bg: rgba(26, 26, 43, 0.3);
+  --glass-blur: 12px;
+  --glass-border: rgba(255, 255, 255, 0.1);
+
+  /* ==================== SHADOWS & GLOWS ==================== */
+
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.5);
+
+  --glow-primary: 0 0 20px var(--biome-accent-glow);
+  --glow-strong: 0 0 40px var(--biome-accent-glow);
+
+  /* ==================== ANIMATIONS ==================== */
+
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.3s ease;
+  --transition-slow: 0.5s ease;
+
+  /* ==================== Z-INDEX LAYERS ==================== */
+
+  --z-background: 0;
+  --z-particles: 1;
+  --z-content: 10;
+  --z-overlay: 100;
+  --z-modal: 1000;
+  --z-tooltip: 2000;
+}
+
+/* ==================== BIOME DATA ATTRIBUTE ==================== */
+
+/* Default biome is 'ice-spikes' */
+html:not([data-biome]),
+html[data-biome="ice-spikes"] {
+  /* Ice Spikes biome is defined in ice-spikes.css */
+}
+
+/* ==================== GLOBAL MINECRAFT STYLES ==================== */
+
+/* Pixelated image rendering */
+.mc-pixelated {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Minecraft font */
+.mc-text {
+  font-family: 'Minecraft', 'Monocraft', monospace;
+  image-rendering: pixelated;
+}
+
+/* Disable text selection on UI elements */
+.mc-noselect {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* ==================== UTILITY CLASSES ==================== */
+
+.biome-gradient-bg {
+  background: linear-gradient(135deg,
+    var(--biome-primary) 0%,
+    var(--biome-primary-dark) 100%
+  );
+}
+
+.biome-text-gradient {
+  background: linear-gradient(135deg,
+    var(--biome-primary-light),
+    var(--biome-accent)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.biome-border {
+  border: 1px solid var(--biome-border-primary);
+}
+
+.biome-glow {
+  box-shadow: var(--glow-primary);
+}
