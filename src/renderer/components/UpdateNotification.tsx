@@ -5,6 +5,7 @@ interface UpdateInfo {
   releaseDate: string;
   changelog: string[];
   required: boolean;
+  type?: 'launcher-only' | 'full';
   downloadUrl: string;
   fileSize: number;
 }

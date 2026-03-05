@@ -4,6 +4,7 @@ import fetch from 'node-fetch';
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import { spawn } from 'child_process';
 import { MINECRAFT_CONFIG } from '../minecraft/config';
 
 export interface UpdateInfo {
@@ -12,6 +13,7 @@ export interface UpdateInfo {
   releaseDate?: string;
   changelog?: string[];
   required?: boolean;
+  type?: 'launcher-only' | 'full';
   downloadUrl?: string;
   fileSize?: number;
 }
@@ -50,7 +52,7 @@ export class UpdateManager {
       const data = await response.json() as UpdateInfo;
 
       if (data.updateAvailable) {
-        console.log(`Доступно обновление: ${data.version}`);
+        console.log(`Доступно обновление: ${data.version} (тип: ${data.type || 'full'})`);
         this.sendToRenderer('update-available', data);
       } else {
         console.log('Обновлений не найдено');
@@ -158,7 +160,9 @@ export class UpdateManager {
   }
 
   /**
-   * Установить обновление
+   * Установить обновление.
+   * Если скачанный файл — .asar, применяется launcher-only обновление через bat-скрипт.
+   * Если .exe — запускается полный установщик как раньше.
    */
   installUpdate(filePath?: string): void {
     const updateFile = filePath || this.downloadedFilePath;
@@ -171,18 +175,52 @@ export class UpdateManager {
       throw new Error('Файл обновления не существует');
     }
 
-    console.log(`Запуск установщика: ${updateFile}`);
+    if (path.extname(updateFile).toLowerCase() === '.asar') {
+      this.installAsarUpdate(updateFile);
+    } else {
+      this.installFullUpdate(updateFile);
+    }
+  }
 
-    // Открываем установщик
-    shell.openPath(updateFile).then((error) => {
+  /**
+   * Launcher-only обновление: заменяет app.asar через bat-скрипт и перезапускает лаунчер.
+   * Minecraft-файлы не затрагиваются.
+   */
+  private installAsarUpdate(newAsarPath: string): void {
+    const currentAsarPath = path.join(process.resourcesPath, 'app.asar');
+    const exePath = app.getPath('exe');
+
+    const tempDir = path.dirname(newAsarPath);
+    const batchPath = path.join(tempDir, 'spa-update.bat');
+
+    const batchContent = [
+      '@echo off',
+      'timeout /t 2 /nobreak > nul',
+      `move /y "${newAsarPath}" "${currentAsarPath}"`,
+      `start "" "${exePath}"`,
+    ].join('\r\n');
+
+    console.log(`Применение launcher-only обновления: ${newAsarPath} -> ${currentAsarPath}`);
+
+    fs.writeFileSync(batchPath, batchContent, 'utf-8');
+
+    spawn('cmd.exe', ['/c', batchPath], { detached: true, stdio: 'ignore' }).unref();
+
+    setTimeout(() => app.quit(), 500);
+  }
+
+  /**
+   * Полное обновление: запускает установщик и закрывает лаунчер.
+   */
+  private installFullUpdate(installerPath: string): void {
+    console.log(`Запуск установщика: ${installerPath}`);
+
+    shell.openPath(installerPath).then((error) => {
       if (error) {
         console.error('Ошибка запуска установщика:', error);
         this.sendToRenderer('update-error', { message: error });
       } else {
-        // Закрываем приложение после запуска установщика
-        setTimeout(() => {
-          app.quit();
-        }, 1000);
+        setTimeout(() => app.quit(), 1000);
       }
     });
   }
