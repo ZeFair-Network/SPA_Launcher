@@ -4,6 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SP.A Launcher</title>
+    <script>
+      // Применяем сохранённую тему до рендера React, чтобы не было мерцания
+      (function () {
+        var biome = localStorage.getItem('spa-launcher-biome') || 'ice-spikes';
+        document.documentElement.setAttribute('data-biome', biome);
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
