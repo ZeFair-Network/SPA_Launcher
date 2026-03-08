@@ -13,6 +13,7 @@
     "prepare-resources": "node prepare-resources.js",
     "dist": "npm run build && electron-builder",
     "dist:full": "npm run prepare-resources && npm run build && electron-builder",
+    "dist:asar": "npm run build && electron-builder --dir && node -e \"const fs=require('fs');fs.copyFileSync('release/win-unpacked/resources/app.asar','release/app.asar');console.log('Ready: release/app.asar');\"",
     "start": "npm run build && electron ."
   },
   "dependencies": {
