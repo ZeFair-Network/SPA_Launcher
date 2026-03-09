@@ -1,8 +1,13 @@
+type NewsBlockType =
+  | { type: 'paragraph'; content: string }
+  | { type: 'heading';   content: string }
+  | { type: 'image';     url: string; caption?: string };
+
 interface NewsItem {
   id: number;
   title: string;
-  body: string;
-  image_url: string | null;
+  body: string;          // JSON-строка NewsBlockType[] или plain-text (legacy)
+  cover_image: string | null;
   created_at: string;
   updated_at: string;
 }
