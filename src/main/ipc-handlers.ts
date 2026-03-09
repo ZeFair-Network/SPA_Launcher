@@ -1,5 +1,6 @@
 import { ipcMain, dialog, BrowserWindow } from 'electron';
-import { login, register, getAuth, logout, uploadSkin, deleteSkin } from './auth/auth-manager';
+import fetch from 'node-fetch';
+import { login, register, getAuth, logout, uploadSkin, deleteSkin, getApiUrl } from './auth/auth-manager';
 import { downloadMinecraft, isMinecraftInstalled } from './minecraft/downloader';
 import { installFabric, isFabricInstalled } from './minecraft/fabric';
 import { getModsList, syncMods, toggleMod, deleteMod, addMod, openModsFolder } from './minecraft/mods';
@@ -198,6 +199,20 @@ export function registerIpcHandlers(mainWindow: BrowserWindow): void {
 
   ipcMain.handle('game:is-running', async () => {
     return isGameRunning();
+  });
+
+  // News
+  ipcMain.handle('news:get', async () => {
+    try {
+      const response = await fetch(`${getApiUrl()}/api/news`);
+      const data = await response.json() as any;
+      if (!response.ok) {
+        throw new Error(data.error || `HTTP ${response.status}`);
+      }
+      return { success: true, data };
+    } catch (err: any) {
+      return { success: false, error: err.message };
+    }
   });
 
   // Updates

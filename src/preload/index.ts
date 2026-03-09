@@ -74,6 +74,9 @@ contextBridge.exposeInMainWorld('api', {
   maximizeWindow: () => ipcRenderer.invoke('window:maximize'),
   closeWindow: () => ipcRenderer.invoke('window:close'),
 
+  // News
+  getNews: () => ipcRenderer.invoke('news:get'),
+
   // Updates
   checkForUpdates: () => ipcRenderer.invoke('updates:check'),
   downloadUpdate: (downloadUrl: string) => ipcRenderer.invoke('updates:download', downloadUrl),

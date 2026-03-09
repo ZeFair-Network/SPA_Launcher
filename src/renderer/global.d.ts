@@ -1,3 +1,12 @@
+interface NewsItem {
+  id: number;
+  title: string;
+  body: string;
+  image_url: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 interface Window {
   api: {
     // Auth
@@ -45,6 +54,9 @@ interface Window {
     isGameRunning: () => Promise<boolean>;
     onGameLog: (cb: (line: string) => void) => () => void;
     onGameExit: (cb: (code: number | null) => void) => () => void;
+
+    // News
+    getNews: () => Promise<{ success: boolean; data?: NewsItem[]; error?: string }>;
 
     // Window
     minimizeWindow: () => Promise<void>;
