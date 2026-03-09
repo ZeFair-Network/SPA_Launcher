@@ -131,8 +131,34 @@ export class UpdateManager {
         fileStream.on('finish', () => {
           fileStream.close();
           this.downloadingUpdate = false;
-          this.downloadedFilePath = filePath;
 
+          // Для .asar файлов проверяем корректность архива (первые 4 байта = 04 00 00 00)
+          if (path.extname(filePath).toLowerCase() === '.asar') {
+            try {
+              const fd = fs.openSync(filePath, 'r');
+              const header = Buffer.alloc(4);
+              fs.readSync(fd, header, 0, 4, 0);
+              fs.closeSync(fd);
+
+              if (header.readUInt32LE(0) !== 4) {
+                fs.unlink(filePath, () => {});
+                const errMsg = 'Скачанный файл не является корректным ASAR-архивом. Проверьте файл обновления на сервере.';
+                console.error(errMsg);
+                this.sendToRenderer('update-error', { message: errMsg });
+                reject(new Error(errMsg));
+                return;
+              }
+            } catch (validationErr: any) {
+              fs.unlink(filePath, () => {});
+              const errMsg = `Ошибка проверки ASAR-файла: ${validationErr.message}`;
+              console.error(errMsg);
+              this.sendToRenderer('update-error', { message: errMsg });
+              reject(new Error(errMsg));
+              return;
+            }
+          }
+
+          this.downloadedFilePath = filePath;
           console.log(`Обновление скачано: ${filePath}`);
           this.sendToRenderer('update-downloaded', { filePath });
 
