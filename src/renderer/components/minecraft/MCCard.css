@@ -229,9 +229,9 @@
   --mc-card-bg: rgba(69, 10, 10, 0.3);
 }
 
-/* Ice Spikes biome */
-[data-biome="ice-spikes"] .mc-card {
-  --mc-card-bg: rgba(14, 165, 233, 0.15);
+/* Summer biome */
+[data-biome="summer"] .mc-card {
+  --mc-card-bg: rgba(16, 185, 129, 0.12);
   backdrop-filter: blur(12px);
 }
 

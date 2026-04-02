@@ -7,7 +7,7 @@
     <script>
       // Применяем сохранённую тему до рендера React, чтобы не было мерцания
       (function () {
-        var biome = localStorage.getItem('spa-launcher-biome') || 'ice-spikes';
+        var biome = localStorage.getItem('spa-launcher-biome') || 'default';
         document.documentElement.setAttribute('data-biome', biome);
       })();
     </script>

@@ -238,9 +238,9 @@
   --mc-button-bg: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
 }
 
-/* Ice Spikes biome - blue with frost */
-[data-biome="ice-spikes"] .mc-button--primary {
-  --mc-button-bg: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+/* Summer biome - emerald green */
+[data-biome="summer"] .mc-button--primary {
+  --mc-button-bg: linear-gradient(135deg, #10b981 0%, #059669 100%);
   backdrop-filter: blur(8px);
 }
 

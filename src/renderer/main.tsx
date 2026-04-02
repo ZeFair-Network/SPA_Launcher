@@ -7,7 +7,8 @@ import './styles/global.css';
 
 // Biome theme system
 import './styles/themes/biome-base.css';
-import './styles/themes/biomes/ice-spikes.css';
+import './styles/themes/biomes/default.css';
+import './styles/themes/biomes/summer.css';
 import './styles/themes/biomes/cherry-blossom.css';
 
 

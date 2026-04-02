@@ -27,12 +27,12 @@
   --biome-bg-secondary: rgba(26, 26, 43, 0.9);
   --biome-bg-tertiary: rgba(36, 36, 56, 0.85);
 
-  /* Gradient background (default = ice-spikes palette) */
+  /* Gradient background (default = cherry-blossom palette) */
   --biome-bg-gradient: linear-gradient(135deg,
     #0f172a 0%,
     #1e293b 25%,
-    #0c4a6e 75%,
-    #075985 100%
+    #4c0519 75%,
+    #881337 100%
   );
 
   /* Text colors */
@@ -115,10 +115,10 @@
 
 /* ==================== BIOME DATA ATTRIBUTE ==================== */
 
-/* Default biome is 'ice-spikes' */
+/* Default biome is 'cherry-blossom' */
 html:not([data-biome]),
-html[data-biome="ice-spikes"] {
-  /* Ice Spikes biome is defined in ice-spikes.css */
+html[data-biome="cherry-blossom"] {
+  /* Cherry Blossom biome is defined in cherry-blossom.css */
 }
 
 /* ==================== GLOBAL MINECRAFT STYLES ==================== */

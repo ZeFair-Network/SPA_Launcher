@@ -5,7 +5,6 @@ import Sidebar, { type Page } from './components/Sidebar';
 import LoginForm from './components/LoginForm';
 import UpdateNotification from './components/UpdateNotification';
 import BiomeEffects from './components/effects/BiomeEffects';
-import TopBar from './components/TopBar';
 import HomePage from './pages/HomePage';
 import SettingsPage from './pages/SettingsPage';
 import ModsPage from './pages/ModsPage';
@@ -23,8 +22,8 @@ interface AuthData {
 
 function loadSavedBiome(): BiomeType {
   const saved = localStorage.getItem('spa-launcher-biome') as BiomeType | null;
-  if (saved === 'cherry-blossom' || saved === 'ice-spikes') return saved;
-  return 'ice-spikes';
+  if (saved === 'default' || saved === 'cherry-blossom' || saved === 'summer') return saved;
+  return 'default';
 }
 
 export default function App() {
@@ -138,7 +137,6 @@ export default function App() {
             />
 
             <div className="main-content">
-              <TopBar currentBiome={currentBiome} />
               <div className="main-content-inner">
                 {page === 'home'        && <HomePage modsCount={modsBadge} />}
                 {page === 'mods'        && <ModsPage />}

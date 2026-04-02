@@ -1,12 +1,12 @@
 /**
- * BiomeThemeSwitcher - Theme switcher with portal animations
- * Switches between Minecraft biome themes
+ * BiomeThemeSwitcher - Theme switcher
+ * Switches between biome themes
  */
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './BiomeThemeSwitcher.css';
 
-export type BiomeType = 'ice-spikes' | 'cherry-blossom';
+export type BiomeType = 'default' | 'summer' | 'cherry-blossom';
 
 interface Biome {
   id: BiomeType;
@@ -19,6 +19,14 @@ interface Biome {
 
 export const BIOMES: Biome[] = [
   {
+    id: 'default',
+    name: 'Default',
+    label: 'Default',
+    icon: '🔵',
+    color: '#3b82f6',
+    description: 'Dark with blue accent',
+  },
+  {
     id: 'cherry-blossom',
     name: 'Cherry Blossom',
     label: 'Spring',
@@ -27,18 +35,19 @@ export const BIOMES: Biome[] = [
     description: 'Sakura spring dawn',
   },
   {
-    id: 'ice-spikes',
-    name: 'Ice Spikes',
-    label: 'Default',
-    icon: '❄️',
-    color: '#0ea5e9',
-    description: 'Frozen tundra night',
+    id: 'summer',
+    name: 'Summer Meadow',
+    label: 'Summer',
+    icon: '☀️',
+    color: '#10b981',
+    description: 'Sunlit meadow',
   },
 ];
 
 export const BIOME_META: Record<BiomeType, { biome: string; time: string; temp: string; icon: string }> = {
+  'default':        { biome: 'Default',        time: 'Ночь',    temp: '−5°C',  icon: '🔵' },
   'cherry-blossom': { biome: 'Cherry Blossom', time: 'Рассвет', temp: '+18°C', icon: '🌸' },
-  'ice-spikes':     { biome: 'Ice Spikes',     time: 'Ночь',    temp: '−12°C', icon: '❄️' },
+  'summer':         { biome: 'Summer Meadow',  time: 'День',    temp: '+24°C', icon: '☀️' },
 };
 
 interface Props {
@@ -47,25 +56,11 @@ interface Props {
 }
 
 const BiomeThemeSwitcher: React.FC<Props> = ({ currentBiome, onBiomeChange }) => {
-  const [isTransitioning, setIsTransitioning] = useState(false);
-
-  const switchBiome = async (newBiome: BiomeType) => {
-    if (newBiome === currentBiome || isTransitioning) return;
-
-    setIsTransitioning(true);
-
-    document.body.classList.add('biome-portal-transition');
-
-    await new Promise(resolve => setTimeout(resolve, 400));
-
+  const switchBiome = (newBiome: BiomeType) => {
+    if (newBiome === currentBiome) return;
     document.documentElement.setAttribute('data-biome', newBiome);
     localStorage.setItem('spa-launcher-biome', newBiome);
     onBiomeChange(newBiome);
-
-    await new Promise(resolve => setTimeout(resolve, 800));
-
-    document.body.classList.remove('biome-portal-transition');
-    setIsTransitioning(false);
   };
 
   return (
@@ -73,9 +68,8 @@ const BiomeThemeSwitcher: React.FC<Props> = ({ currentBiome, onBiomeChange }) =>
       {BIOMES.map(biome => (
         <button
           key={biome.id}
-          className={`biome-tab ${currentBiome === biome.id ? 'biome-tab--active' : ''} ${isTransitioning ? 'biome-tab--disabled' : ''}`}
+          className={`biome-tab ${currentBiome === biome.id ? 'biome-tab--active' : ''}`}
           onClick={() => switchBiome(biome.id)}
-          disabled={isTransitioning}
           style={{ '--biome-color': biome.color } as React.CSSProperties}
           title={biome.description}
         >

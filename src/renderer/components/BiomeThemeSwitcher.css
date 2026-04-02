@@ -1,356 +1,45 @@
-/**
- * BiomeThemeSwitcher Styles
- * Portal transition animations between biomes
- */
+/* ================================================================
+   BiomeThemeSwitcher — inline tab buttons
+   ================================================================ */
 
-/* ==================== BIOME SWITCHER CONTAINER ==================== */
-
-.biome-switcher {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.biome-switcher__title {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--biome-text-primary);
-  margin: 0 0 8px 0;
-  text-align: center;
-}
-
-.biome-switcher__subtitle {
-  font-size: 14px;
-  color: var(--biome-text-secondary);
-  margin: 0 0 24px 0;
-  text-align: center;
-}
-
-/* ==================== BIOME GRID ==================== */
-
-.biome-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  gap: 16px;
-}
-
-/* ==================== BIOME OPTION BUTTON ==================== */
-
-.biome-option {
-  position: relative;
+.biome-switcher-inline {
   display: flex;
-  flex-direction: column;
+  gap: 6px;
+}
+
+.biome-tab {
+  display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 20px 12px;
-  background: var(--biome-bg-secondary);
-  border: 2px solid var(--biome-border-secondary);
-  border-radius: 12px;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-primary);
   cursor: pointer;
-  transition: all 0.3s ease;
-  overflow: hidden;
-
-  /* Remove default button styles */
-  outline: none;
-  font-family: inherit;
-
-  /* 3D effect */
-  box-shadow:
-    inset -2px -2px 0 rgba(0, 0, 0, 0.2),
-    inset 2px 2px 0 rgba(255, 255, 255, 0.1),
-    0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 
-.biome-option__icon {
-  font-size: 32px;
+.biome-tab:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+}
+
+.biome-tab--active {
+  background: color-mix(in srgb, var(--biome-color, #8b5cf6) 20%, transparent);
+  border-color: color-mix(in srgb, var(--biome-color, #8b5cf6) 60%, transparent);
+  color: var(--text-primary);
+}
+
+.biome-tab__icon {
+  font-size: 15px;
   line-height: 1;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-  transition: transform 0.3s ease;
 }
 
-.biome-option__name {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--biome-text-secondary);
-  transition: color 0.3s ease;
-}
-
-.biome-option__indicator {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--biome-accent);
-  border-radius: 50%;
-  font-size: 12px;
-  font-weight: 700;
-  color: white;
-  box-shadow: 0 0 10px var(--biome-accent-glow);
-  animation: indicator-pop 0.3s ease;
-}
-
-@keyframes indicator-pop {
-  0% {
-    transform: scale(0);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1.2);
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-/* Glow effect (hidden by default) */
-.biome-option__glow {
-  position: absolute;
-  inset: -2px;
-  border-radius: inherit;
-  opacity: 0;
-  background: var(--biome-color);
-  filter: blur(12px);
-  transition: opacity 0.3s ease;
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* ==================== HOVER STATE ==================== */
-
-.biome-option:hover:not(.biome-option--disabled) {
-  border-color: var(--biome-color);
-  transform: translateY(-4px);
-  box-shadow:
-    inset -2px -2px 0 rgba(0, 0, 0, 0.2),
-    inset 2px 2px 0 rgba(255, 255, 255, 0.2),
-    0 8px 16px rgba(0, 0, 0, 0.4);
-}
-
-.biome-option:hover:not(.biome-option--disabled) .biome-option__icon {
-  transform: scale(1.15) rotate(5deg);
-}
-
-.biome-option:hover:not(.biome-option--disabled) .biome-option__name {
-  color: var(--biome-text-primary);
-}
-
-.biome-option:hover:not(.biome-option--disabled) .biome-option__glow {
-  opacity: 0.3;
-}
-
-/* ==================== ACTIVE STATE ==================== */
-
-.biome-option--active {
-  background: linear-gradient(135deg,
-    var(--biome-color) 0%,
-    color-mix(in srgb, var(--biome-color) 80%, black) 100%
-  );
-  border-color: var(--biome-color);
-  box-shadow:
-    inset -2px -2px 0 rgba(0, 0, 0, 0.3),
-    inset 2px 2px 0 rgba(255, 255, 255, 0.2),
-    0 0 20px color-mix(in srgb, var(--biome-color) 50%, transparent);
-}
-
-.biome-option--active .biome-option__name {
-  color: var(--biome-text-primary);
-  font-weight: 700;
-}
-
-.biome-option--active .biome-option__icon {
-  transform: scale(1.1);
-}
-
-.biome-option--active .biome-option__glow {
-  opacity: 0.5;
-  animation: active-glow-pulse 2s ease-in-out infinite;
-}
-
-@keyframes active-glow-pulse {
-  0%, 100% {
-    opacity: 0.3;
-  }
-  50% {
-    opacity: 0.6;
-  }
-}
-
-/* ==================== DISABLED STATE ==================== */
-
-.biome-option--disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-/* ==================== FOCUS STATE ==================== */
-
-.biome-option:focus-visible {
-  outline: 2px solid var(--biome-accent);
-  outline-offset: 2px;
-}
-
-/* ==================== TRANSITION OVERLAY ==================== */
-
-.biome-transition-overlay {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(10px);
-  z-index: 9999;
-  animation: overlay-fade-in 0.3s ease;
-}
-
-@keyframes overlay-fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.biome-transition-portal {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  background: radial-gradient(circle,
-    var(--biome-primary) 0%,
-    var(--biome-primary-dark) 50%,
-    transparent 100%
-  );
-  animation: portal-spin 1.5s linear infinite, portal-pulse 1.5s ease-in-out infinite;
-  box-shadow: 0 0 60px var(--biome-accent-glow);
-}
-
-@keyframes portal-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes portal-pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.8;
-  }
-  50% {
-    transform: scale(1.2);
-    opacity: 1;
-  }
-}
-
-.biome-transition-text {
-  margin-top: 32px;
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--biome-text-primary);
-  text-align: center;
-  animation: text-fade 1.5s ease-in-out infinite;
-}
-
-@keyframes text-fade {
-  0%, 100% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-/* ==================== PORTAL TRANSITION ANIMATION ==================== */
-
-/* Applied to body during biome switch */
-.biome-portal-transition {
-  animation: portal-warp 1.5s ease-in-out;
-}
-
-@keyframes portal-warp {
-  0% {
-    transform: scale(1);
-    filter: blur(0px) hue-rotate(0deg);
-  }
-  50% {
-    transform: scale(1.05);
-    filter: blur(15px) hue-rotate(180deg);
-    opacity: 0.7;
-  }
-  100% {
-    transform: scale(1);
-    filter: blur(0px) hue-rotate(360deg);
-  }
-}
-
-/* Particle burst effect */
-.biome-portal-transition::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(circle,
-    var(--biome-primary) 0%,
-    transparent 70%
-  );
-  animation: portal-burst 1.5s ease-out;
-  pointer-events: none;
-  z-index: 9998;
-}
-
-@keyframes portal-burst {
-  0% {
-    opacity: 0;
-    transform: scale(0);
-  }
-  50% {
-    opacity: 0.6;
-  }
-  100% {
-    opacity: 0;
-    transform: scale(3);
-  }
-}
-
-/* ==================== RESPONSIVE ==================== */
-
-@media (max-width: 768px) {
-  .biome-grid {
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-    gap: 12px;
-  }
-
-  .biome-option {
-    padding: 16px 8px;
-  }
-
-  .biome-option__icon {
-    font-size: 28px;
-  }
-
-  .biome-option__name {
-    font-size: 12px;
-  }
-
-  .biome-switcher__title {
-    font-size: 20px;
-  }
-
-  .biome-transition-portal {
-    width: 150px;
-    height: 150px;
-  }
-
-  .biome-transition-text {
-    font-size: 16px;
-  }
+.biome-tab__label {
+  font-size: 13px;
 }

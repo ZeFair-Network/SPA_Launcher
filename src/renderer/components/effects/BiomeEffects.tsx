@@ -16,7 +16,7 @@ interface Particle {
 
 const BiomeEffects: React.FC = () => {
   const [particles, setParticles] = useState<Particle[]>([]);
-  const [currentBiome, setCurrentBiome] = useState<string>('ice-spikes');
+  const [currentBiome, setCurrentBiome] = useState<string>('default');
 
   // Generate particles based on window size
   const generateParticles = () => {
@@ -100,8 +100,8 @@ const BiomeEffects: React.FC = () => {
       </div>
 
       {/* Biome-specific vignettes */}
-      {currentBiome === 'ice-spikes' && (
-        <div className="frost-vignette" />
+      {currentBiome === 'summer' && (
+        <div className="summer-vignette" />
       )}
       {currentBiome === 'cherry-blossom' && (
         <div className="blossom-vignette" />
