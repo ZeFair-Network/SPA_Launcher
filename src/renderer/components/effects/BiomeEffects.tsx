@@ -58,6 +58,7 @@ const BiomeEffects: React.FC = () => {
           const newBiome = document.documentElement.getAttribute('data-biome');
           if (newBiome) {
             setCurrentBiome(newBiome);
+            generateParticles();
           }
         }
       });
@@ -98,9 +99,12 @@ const BiomeEffects: React.FC = () => {
         ))}
       </div>
 
-      {/* Biome-specific effects */}
+      {/* Biome-specific vignettes */}
       {currentBiome === 'ice-spikes' && (
         <div className="frost-vignette" />
+      )}
+      {currentBiome === 'cherry-blossom' && (
+        <div className="blossom-vignette" />
       )}
     </div>
   );

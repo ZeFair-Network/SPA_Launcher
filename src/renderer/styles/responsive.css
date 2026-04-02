@@ -1,436 +1,251 @@
 /**
- * Responsive Styles - SP.A Launcher
- * Adaptive layout for different screen sizes
+ * Responsive Styles — SP.A Launcher
+ * Desktop Electron: 900×600 min, 1100×700 default, resizable up
+ *
+ * Breakpoints:
+ *   width  < 950px   — compact (near minimum)
+ *   width  < 1100px  — slightly squeezed
+ *   width  >= 1400px — wide / large monitor
+ *   width  >= 1800px — ultra-wide
+ *   height < 680px   — short window
+ *   height < 620px   — very short window (near minimum)
  */
 
-/* ==================== MOBILE HAMBURGER MENU ==================== */
-.mobile-menu-toggle {
-  display: none;
-  position: fixed;
-  top: 40px;
-  left: 16px;
-  z-index: var(--z-fixed);
-  width: 40px;
-  height: 40px;
-  background: var(--bg-glass);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border: 1px solid var(--border-glass);
-  border-radius: var(--radius-lg);
-  cursor: pointer;
-  color: var(--text-primary);
-  align-items: center;
-  justify-content: center;
-  transition: all var(--transition-base);
+/* ================================================================
+   SQUEEZED WINDOW  (width < 1100px)
+   Default window is 1100px, so this triggers when user shrinks it
+   ================================================================ */
+@media (max-width: 1100px) {
+  /* Narrower sidebar */
+  :root { --sidebar-width: 210px; }
+  .sidebar { width: 210px; }
+
+  /* Smaller SP.A title */
+  .server-info h2 { font-size: 64px; letter-spacing: 6px; }
+
+  /* Tighter play button */
+  .play-btn { padding: 15px 60px; font-size: 16px; letter-spacing: 3px; }
+
+  /* Tighter stat cards */
+  .home-page { gap: 28px; }
+  .home-stats { gap: 12px; }
+  .stat-card { padding: 14px 20px; min-width: 100px; }
+  .stat-value { font-size: 24px; }
+
+  /* Progress bar narrower */
+  .progress-container { width: 360px; }
+
+  /* News slightly narrower grid */
+  .news-list { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
 }
 
-.mobile-menu-toggle:hover {
-  background: var(--bg-glass-hover);
-  border-color: var(--purple-500);
-  box-shadow: var(--shadow-glow-sm);
-}
+/* ================================================================
+   COMPACT WINDOW  (width < 950px)
+   Near the minimum 900px width
+   ================================================================ */
+@media (max-width: 950px) {
+  :root { --sidebar-width: 185px; }
+  .sidebar { width: 185px; }
 
-.sidebar-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(10, 10, 18, 0.8);
-  z-index: calc(var(--z-fixed) - 1);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
+  /* Logo compact */
+  .sidebar-logo { padding: 20px 14px 16px; }
+  .sidebar-logo h1 { font-size: 22px; letter-spacing: 4px; }
+  .sidebar-logo p { display: none; }
 
-/* ==================== TABLET (< 1024px) ==================== */
-@media (max-width: 1024px) {
-  /* Reduce sidebar width */
-  .sidebar {
-    width: 200px;
-  }
+  /* Nav tighter */
+  .sidebar-nav { padding: 8px 10px; gap: 2px; }
+  .nav-item { font-size: 12.5px; padding: 9px 10px; gap: 9px; }
 
-  :root {
-    --sidebar-width: 200px;
-  }
+  /* User section compact */
+  .sidebar-user { padding: 10px 12px; }
+  .user-avatar { width: 32px; height: 32px; font-size: 14px; }
+  .user-name { font-size: 12px; }
+  .user-status { font-size: 10px; }
+  .logout-btn { font-size: 10px; }
 
-  /* Adjust main content padding */
-  .main-content {
-    padding: var(--space-4);
-  }
+  /* Main content narrower title */
+  .server-info h2 { font-size: 52px; letter-spacing: 5px; }
 
-  /* Smaller text on pages */
-  .page-title {
-    font-size: var(--text-3xl);
-  }
+  /* Compact play button */
+  .play-btn { padding: 13px 44px; font-size: 14px; letter-spacing: 2px; }
 
-  .server-info h2 {
-    font-size: var(--text-3xl);
-  }
+  /* Smaller stat cards */
+  .stat-card { padding: 12px 16px; min-width: 90px; }
+  .stat-value { font-size: 22px; }
+  .stat-label { font-size: 10px; }
+  .stat-icon { width: 14px; height: 14px; }
 
-  /* Adjust grid layouts */
-  .news-list {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  }
-
-  /* Smaller play button */
-  .play-btn {
-    padding: var(--space-3) 48px;
-    font-size: 16px;
-  }
-}
-
-/* ==================== MOBILE LANDSCAPE / SMALL TABLET (< 768px) ==================== */
-@media (max-width: 768px) {
-  /* Hide sidebar by default, show with toggle */
-  .sidebar {
-    position: fixed;
-    left: -240px;
-    top: 0;
-    height: 100vh;
-    width: var(--sidebar-width);
-    z-index: var(--z-fixed);
-    transition: left var(--transition-base);
-    box-shadow: var(--shadow-xl);
-  }
-
-  .sidebar.mobile-open {
-    left: 0;
-  }
-
-  .sidebar-overlay.visible {
-    display: block;
-  }
-
-  /* Show mobile menu toggle */
-  .mobile-menu-toggle {
-    display: flex;
-  }
-
-  /* Adjust main content to full width */
-  .main-content {
-    padding: var(--space-3);
-  }
-
-  /* Console panel full width */
-  .console-panel {
-    width: 100%;
-  }
-
-  /* Stack news cards */
-  .news-list {
-    grid-template-columns: 1fr;
-  }
-
-  /* Reduce title sizes */
-  .page-title {
-    font-size: var(--text-2xl);
-  }
-
-  .server-info h2 {
-    font-size: var(--text-2xl);
-  }
-
-  /* Settings page adjustments */
-  .settings-page {
-    max-width: 100%;
-  }
-
+  /* Settings layout stack */
   .setting-row {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--space-2);
+    gap: 8px;
   }
-
   .setting-row input[type="text"],
-  .setting-row input[type="number"] {
-    width: 100%;
-  }
+  .setting-row input[type="number"] { width: 100%; }
+  .ram-slider { width: 100%; }
 
-  .ram-slider {
-    width: 100%;
-  }
-
-  /* Update notification smaller */
-  .update-notification {
-    width: calc(100% - 32px);
-    right: 16px;
-    top: 40px;
-  }
-
-  /* Login form responsive */
-  .login-form {
-    min-width: 90%;
-    max-width: 400px;
-    padding: var(--space-8);
-  }
-}
-
-/* ==================== MOBILE PORTRAIT (< 640px) ==================== */
-@media (max-width: 640px) {
-  /* Further reduce padding */
-  .main-content {
-    padding: var(--space-2);
-  }
-
-  /* Smaller fonts */
-  .page-title {
-    font-size: var(--text-xl);
-    margin-bottom: var(--space-4);
-  }
-
-  .server-info h2 {
-    font-size: var(--text-xl);
-  }
-
-  /* Compact play button */
-  .play-btn {
-    padding: var(--space-2) var(--space-6);
-    font-size: 14px;
-    letter-spacing: 1px;
-  }
-
-  /* Progress bar container */
-  .progress-container {
-    width: 100%;
-  }
-
-  /* Mods page */
+  /* Mods header stack */
   .mods-header {
     flex-direction: column;
-    gap: var(--space-3);
-    align-items: stretch;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .mods-actions { width: 100%; }
+
+  /* Progress container */
+  .progress-container { width: 100%; max-width: 320px; }
+
+  /* News full-width */
+  .news-list { grid-template-columns: 1fr; }
+
+  /* Update notification narrower */
+  .update-notification { width: calc(100vw - var(--sidebar-width) - 40px); }
+
+  /* Top bar compact */
+  .top-bar { padding: 0 14px; height: 40px; }
+  .top-bar__time, .top-bar__temp { display: none; }
+}
+
+/* ================================================================
+   HIDDEN SIDEBAR  (width < 768px)
+   Sidebar becomes a slide-in drawer
+   ================================================================ */
+@media (max-width: 768px) {
+  :root { --sidebar-width: 240px; }
+
+  .sidebar {
+    position: fixed;
+    left: -260px;
+    top: var(--titlebar-height);
+    bottom: 0;
+    z-index: var(--z-sticky);
+    transition: left 0.3s ease;
+    box-shadow: 8px 0 32px rgba(0, 0, 0, 0.4);
+    width: 240px;
   }
 
-  .mods-actions {
-    width: 100%;
-    flex-direction: column;
+  .sidebar.mobile-open { left: 0; }
+
+  .sidebar-overlay.visible {
+    display: block;
+    opacity: 1;
   }
 
-  .mod-btn {
-    width: 100%;
+  .mobile-menu-toggle {
+    display: flex;
+    align-items: center;
     justify-content: center;
   }
 
-  /* Glass cards smaller padding */
-  .glass-card {
-    padding: var(--space-3);
-  }
-
-  .settings-section {
-    padding: var(--space-4);
-  }
-
-  .news-card {
-    padding: var(--space-4);
-  }
-
-  /* Compact sidebar when shown */
-  .sidebar {
-    width: 220px;
-  }
-
-  .sidebar-logo h1 {
-    font-size: var(--text-xl);
-  }
-
-  .nav-item {
-    padding: var(--space-2) var(--space-3);
-    font-size: var(--text-sm);
-  }
-
-  /* Smaller titlebar */
-  .titlebar {
-    height: 28px;
-  }
-
-  .titlebar-title {
-    font-size: 10px;
-  }
-
-  .titlebar-btn {
-    width: 24px;
-    height: 18px;
-    font-size: 11px;
-  }
+  /* Content takes full width */
+  .console-panel { width: 100%; }
+  .update-notification { width: calc(100% - 32px); right: 16px; }
 
   /* Login form */
-  .login-form {
-    min-width: 95%;
-    padding: var(--space-6);
-  }
-
-  .login-form h2 {
-    font-size: var(--text-2xl);
-  }
+  .login-form { min-width: min(90vw, 380px); padding: 32px; }
 }
 
-/* ==================== VERY SMALL MOBILE (< 480px) ==================== */
-@media (max-width: 480px) {
-  /* Ultra compact */
-  .main-content {
-    padding: var(--space-1);
-  }
-
-  /* Minimize all spacing */
-  .page-title {
-    font-size: var(--text-lg);
-    margin-bottom: var(--space-3);
-  }
-
-  .server-info h2 {
-    font-size: var(--text-lg);
-  }
-
-  .server-info p {
-    font-size: var(--text-sm);
-  }
-
-  .server-address {
-    font-size: 11px !important;
-  }
-
-  /* Tiny play button */
-  .play-btn {
-    padding: var(--space-2) var(--space-4);
-    font-size: 12px;
-  }
-
-  /* Sidebar ultra compact */
-  .sidebar {
-    width: 200px;
-  }
-
-  .sidebar-logo {
-    padding: var(--space-3);
-  }
-
-  .sidebar-logo h1 {
-    font-size: var(--text-lg);
-  }
-
-  .sidebar-logo p {
-    font-size: 9px;
-  }
-
-  .nav-item {
-    padding: var(--space-2);
-    font-size: 12px;
-  }
-
-  /* Update notification */
-  .update-notification {
-    width: calc(100% - 16px);
-    right: 8px;
-    top: 36px;
-    padding: var(--space-3);
-  }
-
-  /* Compact all cards */
-  .glass-card {
-    padding: var(--space-2);
-    border-radius: var(--radius-md);
-  }
-
-  .settings-section,
-  .news-card,
-  .mod-item {
-    padding: var(--space-3);
-  }
-
-  /* Settings adjustments */
-  .save-btn {
-    width: 100%;
-    padding: var(--space-2) var(--space-4);
-  }
+/* ================================================================
+   SHORT WINDOW  (height < 680px)
+   User dragged window shorter than default 700px
+   ================================================================ */
+@media (max-height: 680px) {
+  .home-page { gap: 24px; padding-top: 16px; padding-bottom: 24px; }
+  .server-info h2 { font-size: 60px; }
+  .home-bg-glow { width: 560px; height: 380px; }
 }
 
-/* ==================== LARGE SCREENS (> 1280px) ==================== */
-@media (min-width: 1280px) {
-  /* Wider sidebar on large screens */
-  .sidebar {
-    width: 260px;
-  }
+/* ================================================================
+   VERY SHORT WINDOW  (height < 630px)
+   Near minimum 600px height
+   ================================================================ */
+@media (max-height: 630px) {
+  /* Minimize topbar */
+  .top-bar { height: 36px; }
 
-  :root {
-    --sidebar-width: 260px;
-  }
+  /* Compress home page significantly */
+  .home-page { gap: 16px; padding: 12px 20px 20px; }
+  .server-info h2 { font-size: 48px; letter-spacing: 5px; }
+  .server-version { margin-top: 6px; font-size: 11px; }
 
-  /* Larger content */
-  .main-content {
-    padding: var(--space-8);
-  }
+  /* Smaller play button */
+  .play-btn { padding: 12px 44px; font-size: 14px; letter-spacing: 2px; }
 
-  /* Bigger titles */
-  .page-title {
-    font-size: var(--text-4xl);
-  }
+  /* Compact stat cards */
+  .home-stats { gap: 10px; }
+  .stat-card { padding: 10px 14px; gap: 4px; }
+  .stat-value { font-size: 20px; }
+  .stat-label { font-size: 10px; }
+  .stat-icon { display: none; }
 
-  .server-info h2 {
-    font-size: 56px;
-  }
+  /* Sidebar nav tighter */
+  .sidebar-logo { padding: 16px 14px 12px; }
+  .sidebar-nav { padding: 6px 10px; }
+  .nav-item { padding: 8px 10px; }
+  .sidebar-user { padding: 8px 12px; }
+}
+
+/* ================================================================
+   MINIMUM WINDOW  (height < 610px)
+   600px minimum, barely fits
+   ================================================================ */
+@media (max-height: 610px) {
+  .home-page { gap: 12px; }
+  .server-info h2 { font-size: 40px; letter-spacing: 4px; }
+  .server-version { display: none; }
+  .home-stats { flex-wrap: nowrap; }
+  .stat-card { flex: 1; padding: 8px 10px; min-width: 0; }
+  .stat-value { font-size: 18px; }
+}
+
+/* ================================================================
+   WIDE WINDOW  (width >= 1400px)
+   Larger monitor, more breathing room
+   ================================================================ */
+@media (min-width: 1400px) {
+  :root { --sidebar-width: 260px; }
+  .sidebar { width: 260px; }
+
+  /* Bigger typography */
+  .server-info h2 { font-size: 96px; letter-spacing: 10px; }
+  .play-btn { padding: 20px 96px; font-size: 18px; letter-spacing: 5px; }
+
+  /* More spacing */
+  .home-page { gap: 48px; }
+  .stat-card { padding: 20px 32px; }
+  .stat-value { font-size: 32px; }
+
+  /* Larger sidebar logo */
+  .sidebar-logo h1 { font-size: 34px; }
+  .sidebar-logo { padding: 32px 24px 24px; }
+  .nav-item { font-size: 14.5px; padding: 11px 14px; }
 
   /* More news columns */
-  .news-list {
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  }
+  .news-list { grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); }
+
+  /* Progress bar wider */
+  .progress-container { width: 480px; }
 }
 
-/* ==================== EXTRA LARGE SCREENS (> 1536px) ==================== */
-@media (min-width: 1536px) {
-  /* Maximum comfort on huge screens */
-  .main-content-inner {
-    max-width: 1400px;
-  }
+/* ================================================================
+   ULTRA-WIDE  (width >= 1800px)
+   ================================================================ */
+@media (min-width: 1800px) {
+  :root { --sidebar-width: 280px; }
+  .sidebar { width: 280px; }
 
-  .server-info h2 {
-    font-size: 64px;
-  }
-
-  .play-btn {
-    padding: var(--space-5) 80px;
-    font-size: 20px;
-  }
+  .server-info h2 { font-size: 112px; }
+  .home-page { gap: 56px; }
+  .stat-card { padding: 22px 36px; }
+  .stat-value { font-size: 36px; }
 }
 
-/* ==================== UTILITY: Responsive Visibility ==================== */
-.hide-mobile {
-  display: block;
-}
-
-.show-mobile {
-  display: none;
-}
-
-@media (max-width: 768px) {
-  .hide-mobile {
-    display: none;
-  }
-
-  .show-mobile {
-    display: block;
-  }
-}
-
-/* ==================== LANDSCAPE ORIENTATION ==================== */
-@media (max-height: 600px) and (orientation: landscape) {
-  /* Compact vertical spacing in landscape */
-  .home-page {
-    gap: var(--space-4);
-  }
-
-  .server-info h2 {
-    font-size: var(--text-2xl);
-    margin-bottom: var(--space-1);
-  }
-
-  .play-btn {
-    padding: var(--space-2) var(--space-6);
-  }
-
-  .sidebar-logo {
-    padding: var(--space-2);
-    margin-bottom: var(--space-1);
-  }
-
-  .nav-item {
-    padding: var(--space-2) var(--space-3);
-  }
+/* ================================================================
+   TALL WINDOW  (height >= 900px)
+   Extra vertical space
+   ================================================================ */
+@media (min-height: 900px) {
+  .home-page { gap: 52px; }
+  .stat-card { padding: 22px 32px; }
 }

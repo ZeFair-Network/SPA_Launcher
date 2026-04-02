@@ -22,6 +22,7 @@ function createWindow(): void {
       preload: path.join(__dirname, '../preload/index.js'),
       contextIsolation: true,
       nodeIntegration: false,
+      webviewTag: true,
     },
     backgroundColor: '#1a1a2e',
     show: false,

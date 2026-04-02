@@ -1,20 +1,41 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Play, Download, Loader2, Gamepad2 } from 'lucide-react';
+import { Play, Download, Loader2, Gamepad2, Clock, Package, MemoryStick } from 'lucide-react';
 import { MCProgressBar } from '../components/minecraft';
 
 type Status = 'checking' | 'ready' | 'downloading' | 'installing-fabric' | 'launching' | 'running';
 
-export default function HomePage() {
+interface Props {
+  modsCount?: number;
+}
+
+export default function HomePage({ modsCount = 0 }: Props) {
   const [status, setStatus] = useState<Status>('checking');
   const [progress, setProgress] = useState({ percent: 0, status: '' });
   const [logs, setLogs] = useState<string[]>([]);
   const [consoleOpen, setConsoleOpen] = useState(false);
   const [error, setError] = useState('');
+  const [ramGb, setRamGb] = useState(4);
+  const [playedMinutes, setPlayedMinutes] = useState(0);
   const logsEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     checkInstallation();
+
+    // Load played time in minutes (migrate from old hours key if needed)
+    let minutes = parseInt(localStorage.getItem('spa-played-minutes') || '', 10);
+    if (isNaN(minutes)) {
+      const oldHours = parseInt(localStorage.getItem('spa-played-hours') || '0', 10);
+      minutes = oldHours * 60;
+      localStorage.setItem('spa-played-minutes', String(minutes));
+    }
+    setPlayedMinutes(minutes);
+
+    // Load RAM setting
+    window.api.getSettings().then((s: any) => {
+      const maxRam = parseInt(s?.maxRam || '4096', 10);
+      setRamGb(Math.round(maxRam / 1024));
+    }).catch(() => {});
 
     const unsubLog = window.api.onGameLog((line) => {
       setLogs((prev) => [...prev.slice(-200), line]);
@@ -35,6 +56,27 @@ export default function HomePage() {
     logsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [logs]);
 
+  // Track play time while game is running (stored as minutes)
+  useEffect(() => {
+    if (status !== 'running') return;
+    const start = Date.now();
+    const interval = setInterval(() => {
+      const addedMin = (Date.now() - start) / 60000;
+      const base = parseInt(localStorage.getItem('spa-played-minutes') || '0', 10);
+      setPlayedMinutes(Math.floor(base + addedMin));
+    }, 60000);
+    return () => {
+      clearInterval(interval);
+      const addedMin = Math.round((Date.now() - start) / 60000);
+      if (addedMin > 0) {
+        const base = parseInt(localStorage.getItem('spa-played-minutes') || '0', 10);
+        const total = base + addedMin;
+        localStorage.setItem('spa-played-minutes', String(total));
+        setPlayedMinutes(total);
+      }
+    };
+  }, [status]);
+
   async function checkInstallation() {
     setStatus('checking');
     const mcInstalled = await window.api.isMinecraftInstalled();
@@ -46,14 +88,13 @@ export default function HomePage() {
     } else if (mcInstalled && fabricInstalled) {
       setStatus('ready');
     } else {
-      setStatus('ready'); // Will trigger install on play
+      setStatus('ready');
     }
   }
 
   async function handlePlay() {
     setError('');
 
-    // Check if MC is installed
     const mcInstalled = await window.api.isMinecraftInstalled();
     if (!mcInstalled) {
       setStatus('downloading');
@@ -71,7 +112,6 @@ export default function HomePage() {
       }
     }
 
-    // Check if Fabric is installed
     const fabricInstalled = await window.api.isFabricInstalled();
     if (!fabricInstalled) {
       setStatus('installing-fabric');
@@ -89,7 +129,6 @@ export default function HomePage() {
       }
     }
 
-    // Launch game
     setStatus('launching');
     setConsoleOpen(true);
     setLogs([]);
@@ -103,14 +142,21 @@ export default function HomePage() {
     }
   }
 
+  function formatPlayTime(minutes: number): string {
+    if (minutes < 60) return `${minutes}м`;
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    return m > 0 ? `${h}ч ${m}м` : `${h}ч`;
+  }
+
   function getButtonText(): string {
     switch (status) {
-      case 'checking': return 'Проверка...';
-      case 'downloading': return 'Установка...';
+      case 'checking':          return 'Проверка...';
+      case 'downloading':       return 'Установка...';
       case 'installing-fabric': return 'Установка Fabric...';
-      case 'launching': return 'Запуск...';
-      case 'running': return 'Игра запущена';
-      case 'ready': return 'Играть';
+      case 'launching':         return 'Запуск...';
+      case 'running':           return 'Игра запущена';
+      case 'ready':             return 'Играть';
     }
   }
 
@@ -122,12 +168,12 @@ export default function HomePage() {
 
   function getButtonIcon() {
     switch (status) {
-      case 'checking': return <Loader2 size={20} className="spin" />;
-      case 'downloading': return <Download size={20} />;
-      case 'installing-fabric': return <Loader2 size={20} className="spin" />;
-      case 'launching': return <Loader2 size={20} className="spin" />;
-      case 'running': return <Gamepad2 size={20} />;
-      default: return <Play size={20} />;
+      case 'checking':          return <Loader2 size={22} className="spin" />;
+      case 'downloading':       return <Download size={22} />;
+      case 'installing-fabric': return <Loader2 size={22} className="spin" />;
+      case 'launching':         return <Loader2 size={22} className="spin" />;
+      case 'running':           return <Gamepad2 size={22} />;
+      default:                  return <Play size={22} />;
     }
   }
 
@@ -137,10 +183,13 @@ export default function HomePage() {
     <div className="home-page">
       <div className="home-bg-glow" />
 
+      {/* Title */}
       <div className="server-info">
         <h2>SP.A</h2>
+        <p className="server-version">Minecraft 1.21.11 · Fabric</p>
       </div>
 
+      {/* Play button */}
       <div className="play-section">
         <motion.button
           className={getButtonClass()}
@@ -150,9 +199,9 @@ export default function HomePage() {
           whileTap={!isDisabled ? { scale: 0.95 } : {}}
           animate={status === 'ready' ? {
             boxShadow: [
-              '0 0 20px rgba(139, 92, 246, 0.4)',
-              '0 0 40px rgba(139, 92, 246, 0.6)',
-              '0 0 20px rgba(139, 92, 246, 0.4)'
+              'var(--shadow-glow)',
+              'var(--shadow-glow-lg)',
+              'var(--shadow-glow)',
             ]
           } : {}}
           transition={{ duration: 2, repeat: Infinity }}
@@ -174,13 +223,48 @@ export default function HomePage() {
           </div>
         )}
 
-        {error && <div className="play-status" style={{ color: 'var(--danger)' }}>{error}</div>}
-
-        {status === 'ready' && (
-          <div className="play-status">Minecraft 1.21.11</div>
+        {error && (
+          <div className="play-status" style={{ color: 'var(--danger)' }}>{error}</div>
         )}
       </div>
 
+      {/* Stats cards */}
+      <div className="home-stats">
+        <motion.div
+          className="stat-card"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          <Clock size={16} className="stat-icon" />
+          <div className="stat-value">{formatPlayTime(playedMinutes)}</div>
+          <div className="stat-label">Время в игре</div>
+        </motion.div>
+
+        <motion.div
+          className="stat-card"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <Package size={16} className="stat-icon" />
+          <div className="stat-value">{modsCount}</div>
+          <div className="stat-label">Активных модов</div>
+        </motion.div>
+
+        <motion.div
+          className="stat-card"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <MemoryStick size={16} className="stat-icon" />
+          <div className="stat-value">{ramGb} ГБ</div>
+          <div className="stat-label">Оперативная память</div>
+        </motion.div>
+      </div>
+
+      {/* Console */}
       {logs.length > 0 && (
         <div className={`console-panel ${consoleOpen ? '' : 'collapsed'}`}>
           <div className="console-toggle" onClick={() => setConsoleOpen(!consoleOpen)}>

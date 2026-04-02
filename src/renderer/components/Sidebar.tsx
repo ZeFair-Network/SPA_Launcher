@@ -1,27 +1,42 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Home, Package, Settings, Newspaper, LogOut } from 'lucide-react';
+import { Home, Package, Settings, Newspaper, Globe, Image, LogOut } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
-type Page = 'home' | 'mods' | 'settings' | 'news';
+export type Page = 'home' | 'mods' | 'settings' | 'news' | 'map' | 'screenshots';
+
+interface NavItem {
+  id: Page;
+  icon: LucideIcon;
+  label: string;
+  badge?: number;
+}
+
+const navItems: NavItem[] = [
+  { id: 'home',        icon: Home,      label: 'Главная' },
+  { id: 'mods',        icon: Package,   label: 'Моды' },
+  { id: 'settings',    icon: Settings,  label: 'Настройки' },
+  { id: 'news',        icon: Newspaper, label: 'Новости' },
+  { id: 'map',         icon: Globe,     label: 'Карта мира' },
+  { id: 'screenshots', icon: Image,     label: 'Скриншоты' },
+];
 
 interface Props {
   currentPage: Page;
   onNavigate: (page: Page) => void;
   username: string;
   onLogout: () => void;
+  modsBadge?: number;
   mobileOpen?: boolean;
   onMobileClose?: () => void;
 }
 
-const navItems: { id: Page; icon: LucideIcon; label: string }[] = [
-  { id: 'home', icon: Home, label: 'Главная' },
-  { id: 'mods', icon: Package, label: 'Моды' },
-  { id: 'settings', icon: Settings, label: 'Настройки' },
-  { id: 'news', icon: Newspaper, label: 'Новости' },
-];
+export default function Sidebar({ currentPage, onNavigate, username, onLogout, modsBadge, mobileOpen }: Props) {
+  const items = navItems.map(item => ({
+    ...item,
+    badge: item.id === 'mods' && modsBadge ? modsBadge : undefined,
+  }));
 
-export default function Sidebar({ currentPage, onNavigate, username, onLogout, mobileOpen }: Props) {
   return (
     <div className={`sidebar ${mobileOpen ? 'mobile-open' : ''}`}>
       <div className="sidebar-logo">
@@ -30,7 +45,7 @@ export default function Sidebar({ currentPage, onNavigate, username, onLogout, m
       </div>
 
       <nav className="sidebar-nav">
-        {navItems.map((item) => {
+        {items.map((item) => {
           const Icon = item.icon;
           return (
             <motion.button
@@ -40,8 +55,11 @@ export default function Sidebar({ currentPage, onNavigate, username, onLogout, m
               whileHover={{ scale: 1.02, x: 4 }}
               whileTap={{ scale: 0.98 }}
             >
-              <Icon size={20} className="nav-icon" />
-              {item.label}
+              <Icon size={18} className="nav-icon" />
+              <span className="nav-label">{item.label}</span>
+              {item.badge != null && item.badge > 0 && (
+                <span className="nav-badge">+{item.badge}</span>
+              )}
             </motion.button>
           );
         })}
@@ -50,9 +68,12 @@ export default function Sidebar({ currentPage, onNavigate, username, onLogout, m
       <div className="sidebar-user">
         <div className="user-info">
           <div className="user-avatar">{username[0].toUpperCase()}</div>
-          <div>
+          <div className="user-details">
             <div className="user-name">{username}</div>
-            <div className="user-status">Online</div>
+            <div className="user-status">
+              <span className="user-status-dot" />
+              Online
+            </div>
           </div>
         </div>
         <motion.button

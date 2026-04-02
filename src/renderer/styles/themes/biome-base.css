@@ -27,6 +27,14 @@
   --biome-bg-secondary: rgba(26, 26, 43, 0.9);
   --biome-bg-tertiary: rgba(36, 36, 56, 0.85);
 
+  /* Gradient background (default = ice-spikes palette) */
+  --biome-bg-gradient: linear-gradient(135deg,
+    #0f172a 0%,
+    #1e293b 25%,
+    #0c4a6e 75%,
+    #075985 100%
+  );
+
   /* Text colors */
   --biome-text-primary: #f8fafc;
   --biome-text-secondary: #cbd5e1;

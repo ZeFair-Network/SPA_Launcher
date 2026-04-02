@@ -111,4 +111,14 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.on('update-required', handler);
     return () => ipcRenderer.removeListener('update-required', handler);
   },
+
+  // Shell
+  openExternal: (url: string) => ipcRenderer.invoke('shell:open-external', url),
+
+  // Screenshots
+  getScreenshots: () => ipcRenderer.invoke('screenshots:list'),
+  getScreenshotImage: (fileName: string) => ipcRenderer.invoke('screenshots:get-image', fileName),
+  openScreenshot: (fileName: string) => ipcRenderer.invoke('screenshots:open', fileName),
+  openScreenshotsFolder: () => ipcRenderer.invoke('screenshots:open-folder'),
+  deleteScreenshot: (fileName: string) => ipcRenderer.invoke('screenshots:delete', fileName),
 });

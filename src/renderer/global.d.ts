@@ -1,3 +1,26 @@
+// Electron webview custom element for JSX
+declare namespace React {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace JSX {
+    interface IntrinsicElements {
+      webview: React.HTMLAttributes<HTMLElement> & {
+        src?: string;
+        allowpopups?: string;
+        partition?: string;
+        useragent?: string;
+        disablewebsecurity?: string;
+        ref?: React.Ref<HTMLElement>;
+      };
+    }
+  }
+}
+
+interface Screenshot {
+  fileName: string;
+  size: number;
+  takenAt: string;
+}
+
 type NewsBlockType =
   | { type: 'paragraph'; content: string }
   | { type: 'heading';   content: string }
@@ -97,5 +120,15 @@ interface Window {
     onUpdateDownloaded: (cb: (data: { filePath: string }) => void) => () => void;
     onUpdateError: (cb: (data: { message: string }) => void) => () => void;
     onUpdateRequired: (cb: (data: any) => void) => () => void;
+
+    // Shell
+    openExternal: (url: string) => Promise<void>;
+
+    // Screenshots
+    getScreenshots: () => Promise<{ success: boolean; data: Screenshot[]; error?: string }>;
+    getScreenshotImage: (fileName: string) => Promise<string | null>;
+    openScreenshot: (fileName: string) => Promise<void>;
+    openScreenshotsFolder: () => Promise<void>;
+    deleteScreenshot: (fileName: string) => Promise<{ success: boolean; error?: string }>;
   };
 }

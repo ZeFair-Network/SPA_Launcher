@@ -1,10 +1,13 @@
-import { ipcMain, dialog, BrowserWindow } from 'electron';
+import { ipcMain, dialog, shell, BrowserWindow } from 'electron';
+import fs from 'fs';
+import path from 'path';
 import fetch from 'node-fetch';
 import { login, register, getAuth, logout, uploadSkin, deleteSkin, getApiUrl } from './auth/auth-manager';
 import { downloadMinecraft, isMinecraftInstalled } from './minecraft/downloader';
 import { installFabric, isFabricInstalled } from './minecraft/fabric';
 import { getModsList, syncMods, toggleMod, deleteMod, addMod, openModsFolder } from './minecraft/mods';
 import { launchGame, isGameRunning, getSettings, saveSettings, LaunchSettings } from './minecraft/launcher';
+import { getScreenshotsDir } from './utils/paths';
 import { findJava, downloadJava } from './utils/java';
 import { updateManager } from './updater/update-manager';
 
@@ -240,6 +243,63 @@ export function registerIpcHandlers(mainWindow: BrowserWindow): void {
       return { success: true };
     } catch (err: any) {
       return { success: false, error: err.message };
+    }
+  });
+
+  // Screenshots
+  ipcMain.handle('screenshots:list', async () => {
+    try {
+      const dir = getScreenshotsDir();
+      const files = fs.readdirSync(dir)
+        .filter(f => /\.(png|jpg|jpeg)$/i.test(f))
+        .map(fileName => {
+          const filePath = path.join(dir, fileName);
+          const stat = fs.statSync(filePath);
+          return { fileName, size: stat.size, takenAt: stat.mtime.toISOString() };
+        })
+        .sort((a, b) => new Date(b.takenAt).getTime() - new Date(a.takenAt).getTime());
+      return { success: true, data: files };
+    } catch (err: any) {
+      return { success: false, error: err.message, data: [] };
+    }
+  });
+
+  ipcMain.handle('screenshots:get-image', async (_event, fileName: string) => {
+    try {
+      const filePath = path.join(getScreenshotsDir(), path.basename(fileName));
+      if (!fs.existsSync(filePath)) return null;
+      const buffer = fs.readFileSync(filePath);
+      const ext = path.extname(fileName).slice(1).toLowerCase();
+      const mime = (ext === 'jpg' || ext === 'jpeg') ? 'image/jpeg' : 'image/png';
+      return `data:${mime};base64,${buffer.toString('base64')}`;
+    } catch {
+      return null;
+    }
+  });
+
+  ipcMain.handle('screenshots:open', async (_event, fileName: string) => {
+    const filePath = path.join(getScreenshotsDir(), path.basename(fileName));
+    if (fs.existsSync(filePath)) await shell.openPath(filePath);
+  });
+
+  ipcMain.handle('screenshots:open-folder', async () => {
+    await shell.openPath(getScreenshotsDir());
+  });
+
+  ipcMain.handle('screenshots:delete', async (_event, fileName: string) => {
+    try {
+      const filePath = path.join(getScreenshotsDir(), path.basename(fileName));
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err.message };
+    }
+  });
+
+  // Shell
+  ipcMain.handle('shell:open-external', async (_event, url: string) => {
+    if (/^https?:\/\//i.test(url)) {
+      await shell.openExternal(url);
     }
   });
 }

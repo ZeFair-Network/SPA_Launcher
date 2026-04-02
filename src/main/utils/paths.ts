@@ -49,3 +49,9 @@ export function getJavaDir(): string {
   fs.mkdirSync(dir, { recursive: true });
   return dir;
 }
+
+export function getScreenshotsDir(): string {
+  const dir = path.join(getMinecraftDir(), 'screenshots');
+  fs.mkdirSync(dir, { recursive: true });
+  return dir;
+}

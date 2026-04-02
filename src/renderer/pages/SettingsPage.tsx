@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { MCProgressBar } from '../components/minecraft';
-import BiomeThemeSwitcher from '../components/BiomeThemeSwitcher';
+import BiomeThemeSwitcher, { type BiomeType } from '../components/BiomeThemeSwitcher';
 
-export default function SettingsPage() {
+interface Props {
+  currentBiome: BiomeType;
+  onBiomeChange: (biome: BiomeType) => void;
+}
+
+export default function SettingsPage({ currentBiome, onBiomeChange }: Props) {
   const [settings, setSettings] = useState({
     minRam: '512',
     maxRam: '4096',
@@ -82,9 +87,13 @@ export default function SettingsPage() {
     <div className="settings-page">
       <h2>Настройки</h2>
 
-      {/* Biome Theme */}
+      {/* Appearance */}
       <div className="settings-section glass-card">
-        <BiomeThemeSwitcher />
+        <h3>Оформление</h3>
+        <div className="setting-row">
+          <label>Тема биома</label>
+          <BiomeThemeSwitcher currentBiome={currentBiome} onBiomeChange={onBiomeChange} />
+        </div>
       </div>
 
       {/* Skin */}
