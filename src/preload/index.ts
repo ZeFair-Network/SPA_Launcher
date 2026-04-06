@@ -74,6 +74,13 @@ contextBridge.exposeInMainWorld('api', {
   maximizeWindow: () => ipcRenderer.invoke('window:maximize'),
   closeWindow: () => ipcRenderer.invoke('window:close'),
 
+  // Forum
+  getForumTopics: (category?: string) => ipcRenderer.invoke('forum:get-topics', category),
+  getForumTopic: (id: number) => ipcRenderer.invoke('forum:get-topic', id),
+  createForumTopic: (payload: { title: string; body: string; category: string }) => ipcRenderer.invoke('forum:create-topic', payload),
+  addForumComment: (topicId: number, body: string) => ipcRenderer.invoke('forum:add-comment', topicId, body),
+  toggleForumLike: (topicId: number) => ipcRenderer.invoke('forum:toggle-like', topicId),
+
   // News
   getNews: () => ipcRenderer.invoke('news:get'),
 

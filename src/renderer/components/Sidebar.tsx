@@ -1,9 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Home, Package, Settings, Newspaper, Globe, Image, LogOut } from 'lucide-react';
+import { Home, Package, Settings, Newspaper, Globe, Image, User, MessageSquare, LogOut } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
-export type Page = 'home' | 'mods' | 'settings' | 'news' | 'map' | 'screenshots';
+export type Page = 'home' | 'mods' | 'settings' | 'news' | 'map' | 'screenshots' | 'profile' | 'forum';
 
 interface NavItem {
   id: Page;
@@ -15,10 +15,12 @@ interface NavItem {
 const navItems: NavItem[] = [
   { id: 'home',        icon: Home,      label: 'Главная' },
   { id: 'mods',        icon: Package,   label: 'Моды' },
-  { id: 'settings',    icon: Settings,  label: 'Настройки' },
   { id: 'news',        icon: Newspaper, label: 'Новости' },
   { id: 'map',         icon: Globe,     label: 'Карта мира' },
-  { id: 'screenshots', icon: Image,     label: 'Скриншоты' },
+  { id: 'screenshots', icon: Image,         label: 'Скриншоты' },
+  { id: 'forum',       icon: MessageSquare, label: 'Форум' },
+  { id: 'profile',     icon: User,          label: 'Профиль' },
+  { id: 'settings',    icon: Settings,      label: 'Настройки' },
 ];
 
 interface Props {

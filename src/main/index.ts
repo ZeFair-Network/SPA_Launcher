@@ -1,9 +1,10 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, Tray, Menu, nativeImage } from 'electron';
 import path from 'path';
 import { registerIpcHandlers } from './ipc-handlers';
 import { updateManager } from './updater/update-manager';
 
 let mainWindow: BrowserWindow | null = null;
+let tray: Tray | null = null;
 
 const isDev = process.argv.includes('--dev') || (
   !app.isPackaged && process.env.VITE_DEV_SERVER === 'true'
@@ -58,13 +59,48 @@ function createWindow(): void {
       mainWindow?.maximize();
     }
   });
-  ipcMain.handle('window:close', () => mainWindow?.close());
+  // Закрыть = свернуть в трей
+  ipcMain.handle('window:close', () => mainWindow?.hide());
+
+  // Создание иконки в трее
+  const iconPath = path.join(__dirname, '../../build/icon.png');
+  const icon = nativeImage.createFromPath(iconPath).resize({ width: 16, height: 16 });
+  tray = new Tray(icon);
+  tray.setToolTip('SP.A Launcher');
+
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Открыть',
+      click: () => {
+        mainWindow?.show();
+        mainWindow?.focus();
+      },
+    },
+    { type: 'separator' },
+    {
+      label: 'Выйти',
+      click: () => {
+        tray?.destroy();
+        app.quit();
+      },
+    },
+  ]);
+  tray.setContextMenu(contextMenu);
+
+  tray.on('double-click', () => {
+    if (mainWindow?.isVisible()) {
+      mainWindow.hide();
+    } else {
+      mainWindow?.show();
+      mainWindow?.focus();
+    }
+  });
 }
 
 app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
-  app.quit();
+  // Не выходим — приложение остаётся в трее
 });
 
 app.on('activate', () => {

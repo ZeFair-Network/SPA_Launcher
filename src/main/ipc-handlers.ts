@@ -204,6 +204,86 @@ export function registerIpcHandlers(mainWindow: BrowserWindow): void {
     return isGameRunning();
   });
 
+  // Forum
+  ipcMain.handle('forum:get-topics', async (_event, category?: string) => {
+    try {
+      const auth = getAuth();
+      const qs = category && category !== 'all' ? `?category=${encodeURIComponent(category)}` : '';
+      const response = await fetch(`${getApiUrl()}/api/forum/topics${qs}`, {
+        headers: auth?.token ? { Authorization: `Bearer ${auth.token}` } : {},
+      });
+      const data = await response.json() as any;
+      if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
+      return { success: true, data };
+    } catch (err: any) {
+      return { success: false, error: err.message };
+    }
+  });
+
+  ipcMain.handle('forum:get-topic', async (_event, id: number) => {
+    try {
+      const auth = getAuth();
+      const response = await fetch(`${getApiUrl()}/api/forum/topics/${id}`, {
+        headers: auth?.token ? { Authorization: `Bearer ${auth.token}` } : {},
+      });
+      const data = await response.json() as any;
+      if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
+      return { success: true, data };
+    } catch (err: any) {
+      return { success: false, error: err.message };
+    }
+  });
+
+  ipcMain.handle('forum:create-topic', async (_event, payload: { title: string; body: string; category: string }) => {
+    try {
+      const auth = getAuth();
+      if (!auth?.token) throw new Error('Необходимо авторизоваться');
+      const response = await fetch(`${getApiUrl()}/api/forum/topics`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${auth.token}` },
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json() as any;
+      if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
+      return { success: true, data };
+    } catch (err: any) {
+      return { success: false, error: err.message };
+    }
+  });
+
+  ipcMain.handle('forum:add-comment', async (_event, topicId: number, body: string) => {
+    try {
+      const auth = getAuth();
+      if (!auth?.token) throw new Error('Необходимо авторизоваться');
+      const response = await fetch(`${getApiUrl()}/api/forum/topics/${topicId}/comments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${auth.token}` },
+        body: JSON.stringify({ body }),
+      });
+      const data = await response.json() as any;
+      if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
+      return { success: true, data };
+    } catch (err: any) {
+      return { success: false, error: err.message };
+    }
+  });
+
+  ipcMain.handle('forum:toggle-like', async (_event, topicId: number) => {
+    try {
+      const auth = getAuth();
+      if (!auth?.token) throw new Error('Необходимо авторизоваться');
+      const response = await fetch(`${getApiUrl()}/api/forum/topics/${topicId}/like`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${auth.token}` },
+      });
+      const data = await response.json() as any;
+      if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
+      return { success: true, data };
+    } catch (err: any) {
+      return { success: false, error: err.message };
+    }
+  });
+
   // News
   ipcMain.handle('news:get', async () => {
     try {

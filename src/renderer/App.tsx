@@ -11,6 +11,8 @@ import ModsPage from './pages/ModsPage';
 import NewsPage from './pages/NewsPage';
 import ScreenshotsPage from './pages/ScreenshotsPage';
 import MapPage from './pages/MapPage';
+import ProfilePage from './pages/ProfilePage';
+import ForumPage from './pages/ForumPage';
 import type { BiomeType } from './components/BiomeThemeSwitcher';
 
 interface AuthData {
@@ -144,6 +146,8 @@ export default function App() {
                 {page === 'news'        && <NewsPage />}
                 {page === 'map'         && <MapPage />}
                 {page === 'screenshots' && <ScreenshotsPage />}
+                {page === 'profile'     && <ProfilePage />}
+                {page === 'forum'       && <ForumPage />}
               </div>
             </div>
           </>

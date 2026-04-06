@@ -26,6 +26,30 @@ type NewsBlockType =
   | { type: 'heading';   content: string }
   | { type: 'image';     url: string; caption?: string };
 
+interface ForumTopic {
+  id: number;
+  title: string;
+  body: string;
+  category: 'general' | 'bugs' | 'ideas';
+  author_name: string;
+  pinned: number;
+  created_at: string;
+  likes_count: number;
+  comments_count: number;
+  liked: number;
+}
+
+interface ForumTopicDetail extends ForumTopic {
+  comments: ForumComment[];
+}
+
+interface ForumComment {
+  id: number;
+  author_name: string;
+  body: string;
+  created_at: string;
+}
+
 interface NewsItem {
   id: number;
   title: string;
@@ -82,6 +106,13 @@ interface Window {
     isGameRunning: () => Promise<boolean>;
     onGameLog: (cb: (line: string) => void) => () => void;
     onGameExit: (cb: (code: number | null) => void) => () => void;
+
+    // Forum
+    getForumTopics: (category?: string) => Promise<{ success: boolean; data?: ForumTopic[]; error?: string }>;
+    getForumTopic: (id: number) => Promise<{ success: boolean; data?: ForumTopicDetail; error?: string }>;
+    createForumTopic: (payload: { title: string; body: string; category: string }) => Promise<{ success: boolean; data?: ForumTopic; error?: string }>;
+    addForumComment: (topicId: number, body: string) => Promise<{ success: boolean; data?: ForumComment; error?: string }>;
+    toggleForumLike: (topicId: number) => Promise<{ success: boolean; data?: { liked: boolean; likes_count: number }; error?: string }>;
 
     // News
     getNews: () => Promise<{ success: boolean; data?: NewsItem[]; error?: string }>;
